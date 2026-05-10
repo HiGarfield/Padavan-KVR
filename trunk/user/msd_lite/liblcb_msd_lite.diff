@@ -2,12 +2,38 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -16,8 +16,7 @@ include(CheckFunctionExists)
- include(CheckSymbolExists)
- include(CheckCCompilerFlag)
-
+  include(CheckSymbolExists)
+  include(CheckCCompilerFlag)
+ 
 -find_library(PTHREAD_LIBRARY pthread)
 -list(APPEND CMAKE_REQUIRED_LIBRARIES ${PTHREAD_LIBRARY})
 +list(APPEND CMAKE_REQUIRED_LIBRARIES pthread)
-
+ 
  ############################# MACRO SECTION ############################
  macro(try_c_flag prop flag)
+diff --git a/src/threadpool/threadpool.c b/src/threadpool/threadpool.c
+--- a/src/threadpool/threadpool.c
++++ b/src/threadpool/threadpool.c
+@@ -537,9 +537,22 @@
+ #define TP_EV_OTHER(event)						\
+     (TP_EV_READ == (event) ? TP_EV_WRITE : TP_EV_READ)
+ 
++#ifndef SYS_pidfd_open
++# ifdef __NR_pidfd_open
++#  define SYS_pidfd_open __NR_pidfd_open
++# endif
++#endif
++
+ static int
+ pidfd_open(pid_t pid, unsigned int flags) {
++#ifdef SYS_pidfd_open
+ 	return syscall(SYS_pidfd_open, pid, flags);
++#else
++	(void)pid;
++	(void)flags;
++	errno = ENOSYS;
++	return (-1);
++#endif
+ }
+ 
+ /* Translate thread pool flags <-> epoll flags. */
