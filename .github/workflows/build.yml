@@ -1,0 +1,230 @@
+name: build
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 选择机型
+        required: true
+        type: choice
+        default: All
+        options:
+          - All
+          - CR660x
+          - K2P-5.0
+          - K2P-4.0
+          - K2P-32-512-usb
+          - RT-AC85P
+          - RT-AC85P-无插件
+          - MI-R3G
+          - MI-MINI
+          - MI-NANO
+          - NEWIFI3
+          - NEWIFI-MINI
+          - PSG1218_nano
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    if: github.event.repository.owner.id == github.event.sender.id
+    outputs:
+      matrix: ${{ steps.models.outputs.matrix }}
+      models: ${{ steps.models.outputs.models }}
+    steps:
+      - name: Select models
+        id: models
+        shell: bash
+        run: |
+          set -euo pipefail
+          all_models='[
+            {"input":"CR660x","tname":"CR660x","profile":"high"},
+            {"input":"K2P-5.0","tname":"K2P","profile":"lite"},
+            {"input":"K2P-4.0","tname":"K2P-4","profile":"lite"},
+            {"input":"K2P-32-512-usb","tname":"K2P-32-512-usb","profile":"mid"},
+            {"input":"RT-AC85P","tname":"RT-AC85P","profile":"rt_ac85p"},
+            {"input":"RT-AC85P-无插件","tname":"RT-AC85P","profile":"none"},
+            {"input":"MI-R3G","tname":"MI-R3G","profile":"mid"},
+            {"input":"MI-MINI","tname":"MI-MINI","profile":"mi_mini"},
+            {"input":"MI-NANO","tname":"MI-NANO","profile":"mi_nano"},
+            {"input":"NEWIFI3","tname":"NEWIFI3","profile":"mid"},
+            {"input":"NEWIFI-MINI","tname":"NEWIFI-MINI","profile":"newifi_mini"},
+            {"input":"PSG1218_nano","tname":"PSG1218_nano","profile":"plain"}
+          ]'
+
+          selected='${{ github.event.inputs.model }}'
+          if [ "$selected" = "All" ]; then
+            matrix=$(jq -c '.' <<<"$all_models")
+          else
+            matrix=$(jq -c --arg model "$selected" '[.[] | select(.input == $model)]' <<<"$all_models")
+          fi
+
+          if [ "$matrix" = "[]" ]; then
+            echo "未匹配到机型: $selected" >&2
+            exit 1
+          fi
+
+          models=$(jq -r '.[].input' <<<"$matrix" | paste -sd ', ' -)
+
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "models=$models" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        model: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialization environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd fakeroot \
+          cpio git python-docutils gettext automake autopoint texinfo build-essential help2man \
+          pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget
+
+      - name: Prepare toolchain
+        run: |
+          cd "$GITHUB_WORKSPACE/toolchain-mipsel"
+          sh dl_toolchain.sh
+          mkdir -p /opt/images/
+
+      - name: Build Firmware
+        env:
+          TNAME: ${{ matrix.model.tname }}
+          PROFILE: ${{ matrix.model.profile }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/trunk"
+
+          if [ ! -f "configs/templates/${TNAME}.config" ]; then
+            echo "configs/templates/${TNAME}.config not found"
+            exit 1
+          fi
+
+          cp -f "configs/templates/${TNAME}.config" .config
+
+          if [ "$PROFILE" != "plain" ]; then
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER=y/CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER=n/g' .config
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_MENTOHUST=y/CONFIG_FIRMWARE_INCLUDE_MENTOHUST=n/g' .config
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT=y/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT=n/g' .config
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_SRELAY=y/CONFIG_FIRMWARE_INCLUDE_SRELAY=n/g' .config
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_NJIT_CLIENT=y/CONFIG_FIRMWARE_INCLUDE_NJIT_CLIENT=n/g' .config
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_OPENSSL_EXE=n/CONFIG_FIRMWARE_INCLUDE_OPENSSL_EXE=y/g' .config
+
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_TRANSMISSION/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_TRANSMISSION_WEB_CONTROL/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_ARIA/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_ARIA_WEB_CONTROL/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_ZEROTIER/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_FRPC/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_ALIDDNS/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_V2RAY/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_XRAY/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_TROJAN/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_SSOBFS/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_SERVER/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CLIENT/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CMD/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_NPC/d' .config
+            sed -i '/CONFIG_FIRMWARE_WEBUI_HIDE_VPN/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_OPENVPN/d' .config
+          fi
+
+          case "$PROFILE" in
+            rt_ac85p)
+              sed -i '/CONFIG_FIRMWARE_INCLUDE_SMARTDNS/d' .config
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_XRAY=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config
+              ;;
+            high)
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_XRAY=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config
+              ;;
+            mid)
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config
+              ;;
+            lite)
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              ;;
+            mi_mini)
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config
+              ;;
+            mi_nano)
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              ;;
+            newifi_mini)
+              sed -i '/CONFIG_FIRMWARE_INCLUDE_MSD_LITE/d' .config
+              sed -i '/CONFIG_FIRMWARE_INCLUDE_XUPNPD/d' .config
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              ;;
+            none|plain)
+              ;;
+            *)
+              echo "未知 profile: $PROFILE" >&2
+              exit 1
+              ;;
+          esac
+
+          sed -i 's/\r//' .config
+          sudo ./clear_tree
+          sudo ./build_firmware_modify "$TNAME" 0
+          sudo mv -f images/*.trx /opt/images/
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: firmware-${{ matrix.model.input }}
+          path: /opt/images/*.trx
+          if-no-files-found: error
+
+  release:
+    needs: [prepare, build]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: firmware-*
+          path: /tmp/firmware
+          merge-multiple: true
+
+      - name: Publish to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUILT_MODELS: ${{ needs.prepare.outputs.models }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="build-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          ls -al /tmp/firmware
+          gh release create "$tag" /tmp/firmware/* \
+            --title "$tag" \
+            --notes "自动构建机型: ${BUILT_MODELS}"
