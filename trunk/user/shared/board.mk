@@ -1,2 +1,9 @@
-CFLAGS += -DBOARD_CR660x -DBOARD_MT7915_DBDC
-BOARD_NUM_USB_PORTS=0
+##################################################################
+# Board PID # Board Name       # PRODUCT # Note
+##################################################################
+# A3004NS # TOTOLINK A3004NS  # MT7621  #
+##################################################################
+
+CFLAGS += -DBOARD_A3004NS -DVENDOR_TOTOLINK
+BOARD_NUM_USB_PORTS=1
+
