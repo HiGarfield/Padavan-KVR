@@ -1,0 +1,416 @@
+name: build
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 选择机型（All 为并行编译全部支持机型）
+        required: true
+        type: choice
+        default: All
+        options:
+          - All
+          - 360P2
+          - 5K-W20
+          - A3004NS
+          - B70
+          - BELL-A-040W-Q
+          - CR660x
+          - D12G
+          - DIR-878
+          - DIR-882
+          - DSBox-DSR1
+          - E8820V2
+          - EA7500
+          - EW1800GX
+          - G7
+          - GHL
+          - HC5661A
+          - HC5761A
+          - HC5861B
+          - JCG-836PRO
+          - JCG-AC836M
+          - JCG-AC856M
+          - JCG-AC860M
+          - JCG-AC876M
+          - JCG-Q20-breed
+          - JCG-Q20-pb
+          - JCG-Q20-uboot
+          - JCG-Y2
+          - JDC-1
+          - K2P
+          - K2P-32-512-usb
+          - K2P-4
+          - K2P-512
+          - K2P-USB
+          - MAC2600R
+          - MI-3
+          - MI-3A
+          - MI-3C
+          - MI-4
+          - MI-4A-100M
+          - MI-4C
+          - MI-MINI
+          - MI-NANO
+          - MI-R3G
+          - MI-R3P
+          - MI-R3P-breed
+          - MI-R4A
+          - MR2600
+          - MSG1500
+          - MSG1500-7615
+          - MZ-R13
+          - MZ-R13P
+          - NETGEAR-BZV
+          - NETGEAR-CHJ
+          - NEWIFI-D1
+          - NEWIFI-MINI
+          - NEWIFI3
+          - OYE-001
+          - PSG1208
+          - PSG1218
+          - PSG1218_nano
+          - PSG712
+          - QM-B1
+          - R2100
+          - R6220
+          - RE6500
+          - RM2100
+          - RM2100-512
+          - RS1200P
+          - RT-AC1200GU
+          - RT-AC85P
+          - RT-AC85P-无插件
+          - TIMECLOUD
+          - TX180X
+          - WALL-AP
+          - WDR7300
+          - WDR8620
+          - WR1200JS
+          - WR330
+          - X18G
+          - XY-C1
+          - YK-L1
+          - ZTE_E8820S
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    if: github.event.repository.owner.id == github.event.sender.id
+    outputs:
+      matrix: ${{ steps.models.outputs.matrix }}
+      models: ${{ steps.models.outputs.models }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Select models
+        id: models
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          selected='${{ github.event.inputs.model }}'
+
+          mapfile -t supported_models < <(
+            find "$GITHUB_WORKSPACE/trunk/configs/templates" -maxdepth 1 -type f -name '*.config' \
+              -printf '%f\n' | sed 's/\.config$//' | sort
+          )
+
+          has_model() {
+            local target="$1"
+            printf '%s\n' "${supported_models[@]}" | grep -Fxq "$target"
+          }
+
+          resolve_profile() {
+            local model="$1"
+            case "$model" in
+              CR660x) echo "high" ;;
+              RT-AC85P) echo "rt_ac85p" ;;
+              RT-AC85P-无插件) echo "none" ;;
+              NEWIFI3|MI-R3G|K2P-32-512-usb) echo "mid" ;;
+              K2P|K2P-4) echo "lite" ;;
+              MI-MINI) echo "mi_mini" ;;
+              MI-NANO) echo "mi_nano" ;;
+              NEWIFI-MINI) echo "newifi_mini" ;;
+              *) echo "plain" ;;
+            esac
+          }
+
+          resolve_tname() {
+            local model="$1"
+            case "$model" in
+              RT-AC85P-无插件) echo "RT-AC85P" ;;
+              *) echo "$model" ;;
+            esac
+          }
+
+          declare -a target_models
+          if [ "$selected" = "All" ]; then
+            target_models=("${supported_models[@]}")
+          elif [ "$selected" = "RT-AC85P-无插件" ]; then
+            target_models=("$selected")
+          elif has_model "$selected"; then
+            target_models=("$selected")
+          else
+            echo "未匹配到机型: $selected" >&2
+            exit 1
+          fi
+
+          json='[]'
+          for model in "${target_models[@]}"; do
+            tname="$(resolve_tname "$model")"
+            profile="$(resolve_profile "$model")"
+            item="$(jq -cn --arg input "$model" --arg tname "$tname" --arg profile "$profile" '{input:$input,tname:$tname,profile:$profile}')"
+            json="$(jq -c --argjson item "$item" '. + [$item]' <<<"$json")"
+          done
+
+          models="$(printf '%s\n' "${target_models[@]}" | paste -sd ', ' -)"
+          echo "matrix=$json" >> "$GITHUB_OUTPUT"
+          echo "models=$models" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: prepare
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        model: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Initialization environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          run_apt_get() {
+            local attempt=1
+            local max_attempts=3
+            local backoff=30
+            local status=0
+            local timeout_limit=15m
+            local kill_after=30s
+            local -a cmd=(sudo apt-get)
+            cmd+=("$@")
+
+            while [ "$attempt" -le "$max_attempts" ]; do
+              if timeout --signal=TERM --kill-after="$kill_after" "$timeout_limit" "${cmd[@]}"; then
+                return 0
+              fi
+
+              status=$?
+              if [ "$status" -ne 124 ] && [ "$status" -ne 137 ]; then
+                return "$status"
+              fi
+
+              if [ "$attempt" -eq "$max_attempts" ]; then
+                return "$status"
+              fi
+
+              echo "apt-get timed out after ${timeout_limit}, retrying in ${backoff}s (attempt $((attempt + 1))/${max_attempts})..."
+              sleep "$backoff"
+              backoff=$((backoff * 2))
+              attempt=$((attempt + 1))
+            done
+          }
+
+          run_apt_get update
+          run_apt_get -y install unzip libtool curl cmake gperf gawk flex bison nano xxd fakeroot \
+            cpio git python3-docutils gettext automake autopoint texinfo build-essential help2man \
+            pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses-dev libltdl-dev wget \
+            autoconf-archive
+
+      - name: Cache toolchain
+        uses: actions/cache@v5
+        with:
+          path: ${{ github.workspace }}/toolchain-mipsel/toolchain-3.4.x
+          key: toolchain-mipsel-${{ hashFiles('toolchain-mipsel/dl_toolchain.sh') }}
+
+      - name: Cache Go toolchain
+        uses: actions/cache@v5
+        with:
+          path: ${{ github.workspace }}/trunk/tools/go
+          key: go-tools-${{ hashFiles('trunk/tools/Makefile') }}
+
+      - name: Prepare toolchain
+        run: |
+          cd "$GITHUB_WORKSPACE/toolchain-mipsel"
+          sh dl_toolchain.sh
+          mkdir -p /opt/images/
+
+      - name: Build Firmware
+        env:
+          TNAME: ${{ matrix.model.tname }}
+          PROFILE: ${{ matrix.model.profile }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/trunk"
+
+          if [ ! -f "configs/templates/${TNAME}.config" ]; then
+            echo "configs/templates/${TNAME}.config not found"
+            exit 1
+          fi
+
+          cp -f "configs/templates/${TNAME}.config" .config
+
+          if [ "$PROFILE" != "plain" ]; then
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER=y/CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER=n/g' .config
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_MENTOHUST=y/CONFIG_FIRMWARE_INCLUDE_MENTOHUST=n/g' .config
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT=y/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT=n/g' .config
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_SRELAY=y/CONFIG_FIRMWARE_INCLUDE_SRELAY=n/g' .config
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_NJIT_CLIENT=y/CONFIG_FIRMWARE_INCLUDE_NJIT_CLIENT=n/g' .config
+            sed -i 's/CONFIG_FIRMWARE_INCLUDE_OPENSSL_EXE=n/CONFIG_FIRMWARE_INCLUDE_OPENSSL_EXE=y/g' .config
+
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_TRANSMISSION/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_TRANSMISSION_WEB_CONTROL/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_ARIA/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_ARIA_WEB_CONTROL/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_ZEROTIER/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_FRPC/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_ALIDDNS/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_V2RAY/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_XRAY/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_TROJAN/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_SSOBFS/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_SERVER/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CLIENT/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CMD/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_NPC/d' .config
+            sed -i '/CONFIG_FIRMWARE_WEBUI_HIDE_VPN/d' .config
+            sed -i '/CONFIG_FIRMWARE_INCLUDE_OPENVPN/d' .config
+          fi
+
+          case "$PROFILE" in
+            rt_ac85p)
+              sed -i '/CONFIG_FIRMWARE_INCLUDE_SMARTDNS/d' .config
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_XRAY=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config
+              ;;
+            high)
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_XRAY=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config
+              ;;
+            mid)
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config
+              ;;
+            lite)
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              ;;
+            mi_mini)
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=y" >> .config
+              ;;
+            mi_nano)
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              ;;
+            newifi_mini)
+              sed -i '/CONFIG_FIRMWARE_INCLUDE_MSD_LITE/d' .config
+              sed -i '/CONFIG_FIRMWARE_INCLUDE_XUPNPD/d' .config
+              echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=y" >> .config
+              echo "CONFIG_FIRMWARE_INCLUDE_FRPC=y" >> .config
+              ;;
+            none|plain)
+              ;;
+            *)
+              echo "未知 profile: $PROFILE" >&2
+              exit 1
+              ;;
+          esac
+
+          sed -i 's/\r//' .config
+          sudo ./clear_tree
+          sudo ./build_firmware_modify "$TNAME" 0
+          sudo mv -f images/*.trx /opt/images/
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: firmware-${{ matrix.model.input }}
+          path: /opt/images/*.trx
+          if-no-files-found: error
+
+  release:
+    needs: [prepare, build]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v7
+        with:
+          pattern: firmware-*
+          path: /tmp/firmware
+
+      - name: Publish to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUILT_MODELS: ${{ needs.prepare.outputs.models }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="build-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          shopt -s nullglob
+
+          mkdir -p /tmp/release-assets
+          artifact_dirs=(/tmp/firmware/firmware-*)
+          if [ "${#artifact_dirs[@]}" -eq 0 ]; then
+            echo "No downloaded artifact directories found under /tmp/firmware" >&2
+            exit 1
+          fi
+
+          for artifact_dir in "${artifact_dirs[@]}"; do
+            model="${artifact_dir#/tmp/firmware/firmware-}"
+            firmware_files=("$artifact_dir"/*.trx)
+            if [ "${#firmware_files[@]}" -eq 0 ]; then
+              echo "No .trx files found in ${artifact_dir}" >&2
+              exit 1
+            fi
+
+            for fw in "${firmware_files[@]}"; do
+              fw_basename="$(basename "$fw")"
+              # Firmware filenames follow the format: PRODUCT_ID_<version>.trx
+              # The version part never contains underscores, so stripping the
+              # longest leading *_ match (greedy) reliably extracts the version
+              # suffix even when the product ID itself contains underscores
+              # (e.g. ZTE_E8820S_<version>.trx).
+              if [[ "$fw_basename" != *_* ]]; then
+                echo "Unexpected firmware filename (no underscore separator): ${fw_basename}" >&2
+                exit 1
+              fi
+              target="/tmp/release-assets/${model}_${fw_basename##*_}"
+              cp "$fw" "$target"
+            done
+          done
+
+          assets=(/tmp/release-assets/*.trx)
+          if [ "${#assets[@]}" -eq 0 ]; then
+            echo "No firmware files found for release" >&2
+            exit 1
+          fi
+
+          shopt -u nullglob
+          ls -al /tmp/release-assets
+          gh release create "$tag" "${assets[@]}" \
+            --title "$tag" \
+            --notes "自动构建机型: ${BUILT_MODELS}"

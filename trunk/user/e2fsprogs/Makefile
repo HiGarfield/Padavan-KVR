@@ -30,7 +30,6 @@ config_test:
 
 configure:
 	( cd $(SRC_NAME) ; \
-	autoreconf -fi ; \
 	PKG_CONFIG_PATH=$(STAGEDIR)/lib/pkgconfig \
 	./configure \
 		--prefix= \
@@ -51,7 +50,7 @@ configure:
 		--disable-tls \
 		--disable-libuuid \
 		--disable-libblkid \
-		--disable-threads \
+		--without-pthread \
 		--enable-symlink-build \
 		--enable-verbose-makecmds \
 		--enable-elf-shlibs \
