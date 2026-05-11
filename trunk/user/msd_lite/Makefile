@@ -10,7 +10,7 @@ download_test:
 	( if [ ! -d $(THISDIR)/$(SRC_NAME) ]; then \
 		for i in 1 2 3; do \
 			git clone https://github.com/rozhuk-im/msd_lite.git && break; \
-			[ $$i -lt 3 ] && sleep 10 || exit 1; \
+			if [ $$i -lt 3 ]; then sleep 10; else exit 1; fi; \
 		done ; \
 		cd $(SRC_NAME) ; \
 		git submodule update --init --recursive ; \
