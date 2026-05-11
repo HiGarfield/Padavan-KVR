@@ -411,10 +411,10 @@ for dir in "" /usr/local $SEARCH_DIR; do
     if test -n "$dir"; then
         LDFLAGS="$LDFLAGS -L$dir/lib"
     fi
-    AC_CHECK_LIB([id3tag -lz], [id3_file_open], [LIBID3TAG_LIBS="-lid3tag -lz"], [unset ac_cv_lib_id3tag_id3_file_open; LDFLAGS="$LDFLAGS_SAVE"; continue])
+    AC_CHECK_LIB([id3tag], [id3_file_open], [LIBID3TAG_LIBS="-lid3tag -lz"], [unset ac_cv_lib_id3tag_id3_file_open; LDFLAGS="$LDFLAGS_SAVE"; continue], [-lz])
     break
 done
-test x"$ac_cv_lib_id3tag__lz___id3_file_open" = x"yes" || AC_MSG_ERROR([Could not find libid3tag])
+test x"$ac_cv_lib_id3tag_id3_file_open" = x"yes" || AC_MSG_ERROR([Could not find libid3tag])
 AC_SUBST(LIBID3TAG_LIBS)
 
 LDFLAGS_SAVE="$LDFLAGS"
