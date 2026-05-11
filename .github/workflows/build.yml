@@ -189,9 +189,22 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           sudo apt-get update
-          sudo apt-get -y install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd fakeroot \
+          sudo apt-get -y install unzip libtool curl cmake gperf gawk flex bison nano xxd fakeroot \
           cpio git python3-docutils gettext automake autopoint texinfo build-essential help2man \
-          pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses-dev libltdl-dev wget
+          pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses-dev libltdl-dev wget \
+          autoconf-archive
+
+      - name: Cache toolchain
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/toolchain-mipsel/toolchain-3.4.x
+          key: toolchain-mipsel-${{ hashFiles('toolchain-mipsel/dl_toolchain.sh') }}
+
+      - name: Cache Go toolchain
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/trunk/tools/go
+          key: go-tools-${{ hashFiles('trunk/tools/Makefile') }}
 
       - name: Prepare toolchain
         run: |
