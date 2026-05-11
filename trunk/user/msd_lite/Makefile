@@ -8,7 +8,10 @@ all: download_test config_test
 
 download_test:
 	( if [ ! -d $(THISDIR)/$(SRC_NAME) ]; then \
-		git clone https://github.com/rozhuk-im/msd_lite.git ; \
+		for i in 1 2 3; do \
+			git clone https://github.com/rozhuk-im/msd_lite.git $(SRC_NAME) && break; \
+			if [ $$i -lt 3 ]; then sleep 10; else exit 1; fi; \
+		done ; \
 		cd $(SRC_NAME) ; \
 		git submodule update --init --recursive ; \
 		patch -p1 -i ../msd_lite.diff ; \
