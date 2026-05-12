@@ -38,6 +38,7 @@ configure:
 	( cd $(SRC_NAME) ; \
 	./autogen.sh ; \
 	ac_cv_lib_avformat__lavcodec__lavutil__lz___avformat_open_input=yes \
+	ac_cv_lib_avformat__lavcodec__lavutil__lz___av_open_input_file=yes \
 	CFLAGS="$(DLNA_CFLAGS)" LDFLAGS="$(DLNA_LDFLAGS)" LIBS="$(DLNA_LIBS)" \
 	./configure \
 		--prefix=/usr \
