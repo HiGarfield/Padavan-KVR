@@ -312,8 +312,7 @@ jobs:
           sudo mv -f images/*.trx /opt/images/
 
       - name: Upload packages
-        uses: actions/upload-artifact@v8
-        if: always()
+        uses: actions/upload-artifact@v7
         with:
           name: firmware-${{ matrix.model.input }}
           path: /opt/images/*.trx
