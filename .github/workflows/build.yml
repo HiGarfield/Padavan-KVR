@@ -330,7 +330,6 @@ jobs:
         with:
           pattern: firmware-*
           path: /tmp/firmware
-          merge-multiple: true
 
       - name: Publish to release
         env:
@@ -340,7 +339,45 @@ jobs:
         run: |
           set -euo pipefail
           tag="build-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          ls -al /tmp/firmware
-          gh release create "$tag" /tmp/firmware/* \
+          shopt -s nullglob
+
+          mkdir -p /tmp/release-assets
+          artifact_dirs=(/tmp/firmware/firmware-*)
+          if [ "${#artifact_dirs[@]}" -eq 0 ]; then
+            echo "No downloaded artifact directories found under /tmp/firmware" >&2
+            exit 1
+          fi
+
+          for artifact_dir in "${artifact_dirs[@]}"; do
+            model="${artifact_dir#/tmp/firmware/firmware-}"
+            firmware_files=("$artifact_dir"/*.trx)
+            if [ "${#firmware_files[@]}" -eq 0 ]; then
+              echo "No .trx files found in ${artifact_dir}" >&2
+              exit 1
+            fi
+
+            for fw in "${firmware_files[@]}"; do
+              target="/tmp/release-assets/${model}-$(basename "$fw")"
+              if [ -e "$target" ]; then
+                stem="${target%.trx}"
+                idx=1
+                while [ -e "${stem}-${idx}.trx" ]; do
+                  idx=$((idx + 1))
+                done
+                target="${stem}-${idx}.trx"
+              fi
+              cp "$fw" "$target"
+            done
+          done
+
+          assets=(/tmp/release-assets/*.trx)
+          if [ "${#assets[@]}" -eq 0 ]; then
+            echo "No firmware files found for release" >&2
+            exit 1
+          fi
+
+          shopt -u nullglob
+          ls -al /tmp/release-assets
+          gh release create "$tag" "${assets[@]}" \
             --title "$tag" \
             --notes "自动构建机型: ${BUILT_MODELS}"
