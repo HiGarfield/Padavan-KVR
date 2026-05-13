@@ -339,24 +339,44 @@ jobs:
         run: |
           set -euo pipefail
           tag="build-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          shopt -s nullglob
 
           mkdir -p /tmp/release-assets
-          for artifact_dir in /tmp/firmware/firmware-*; do
-            [ -d "$artifact_dir" ] || continue
-            model="${artifact_dir##*/firmware-}"
-            for fw in "$artifact_dir"/*.trx; do
-              [ -f "$fw" ] || continue
-              cp -f "$fw" "/tmp/release-assets/${model}-$(basename "$fw")"
+          artifact_dirs=(/tmp/firmware/firmware-*)
+          if [ "${#artifact_dirs[@]}" -eq 0 ]; then
+            echo "No downloaded artifact directories found under /tmp/firmware" >&2
+            exit 1
+          fi
+
+          for artifact_dir in "${artifact_dirs[@]}"; do
+            model="${artifact_dir#/tmp/firmware/firmware-}"
+            firmware_files=("$artifact_dir"/*.trx)
+            if [ "${#firmware_files[@]}" -eq 0 ]; then
+              echo "No .trx files found in ${artifact_dir}" >&2
+              exit 1
+            fi
+
+            for fw in "${firmware_files[@]}"; do
+              target="/tmp/release-assets/${model}-$(basename "$fw")"
+              if [ -e "$target" ]; then
+                stem="${target%.trx}"
+                idx=1
+                while [ -e "${stem}-${idx}.trx" ]; do
+                  idx=$((idx + 1))
+                done
+                target="${stem}-${idx}.trx"
+              fi
+              cp "$fw" "$target"
             done
           done
 
-          mapfile -t assets < <(find /tmp/release-assets -maxdepth 1 -type f -name '*.trx' | sort)
+          assets=(/tmp/release-assets/*.trx)
           if [ "${#assets[@]}" -eq 0 ]; then
             echo "No firmware files found for release" >&2
             exit 1
           fi
 
-          ls -al /tmp/firmware
+          shopt -u nullglob
           ls -al /tmp/release-assets
           gh release create "$tag" "${assets[@]}" \
             --title "$tag" \
