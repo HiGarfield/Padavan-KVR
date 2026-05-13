@@ -357,15 +357,11 @@ jobs:
             fi
 
             for fw in "${firmware_files[@]}"; do
-              target="/tmp/release-assets/${model}-$(basename "$fw")"
-              if [ -e "$target" ]; then
-                stem="${target%.trx}"
-                idx=1
-                while [ -e "${stem}-${idx}.trx" ]; do
-                  idx=$((idx + 1))
-                done
-                target="${stem}-${idx}.trx"
-              fi
+              fw_basename="$(basename "$fw")"
+              # Replace the product-ID segment (everything before the first '_')
+              # with the input model name, so the release filename is unique and
+              # non-redundant even when two models share the same product ID.
+              target="/tmp/release-assets/${model}_${fw_basename#*_}"
               cp "$fw" "$target"
             done
           done
