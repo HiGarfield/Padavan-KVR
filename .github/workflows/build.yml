@@ -357,15 +357,17 @@ jobs:
             fi
 
             for fw in "${firmware_files[@]}"; do
-              target="/tmp/release-assets/${model}-$(basename "$fw")"
-              if [ -e "$target" ]; then
-                stem="${target%.trx}"
-                idx=1
-                while [ -e "${stem}-${idx}.trx" ]; do
-                  idx=$((idx + 1))
-                done
-                target="${stem}-${idx}.trx"
+              fw_basename="$(basename "$fw")"
+              # Firmware filenames follow the format: PRODUCT_ID_<version>.trx
+              # The version part never contains underscores, so stripping the
+              # longest leading *_ match (greedy) reliably extracts the version
+              # suffix even when the product ID itself contains underscores
+              # (e.g. ZTE_E8820S_<version>.trx).
+              if [[ "$fw_basename" != *_* ]]; then
+                echo "Unexpected firmware filename (no underscore separator): ${fw_basename}" >&2
+                exit 1
               fi
+              target="/tmp/release-assets/${model}_${fw_basename##*_}"
               cp "$fw" "$target"
             done
           done
