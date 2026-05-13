@@ -330,7 +330,6 @@ jobs:
         with:
           pattern: firmware-*
           path: /tmp/firmware
-          merge-multiple: true
 
       - name: Publish to release
         env:
@@ -340,7 +339,25 @@ jobs:
         run: |
           set -euo pipefail
           tag="build-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+
+          mkdir -p /tmp/release-assets
+          for artifact_dir in /tmp/firmware/firmware-*; do
+            [ -d "$artifact_dir" ] || continue
+            model="${artifact_dir##*/firmware-}"
+            for fw in "$artifact_dir"/*.trx; do
+              [ -f "$fw" ] || continue
+              cp -f "$fw" "/tmp/release-assets/${model}-$(basename "$fw")"
+            done
+          done
+
+          mapfile -t assets < <(find /tmp/release-assets -maxdepth 1 -type f -name '*.trx' | sort)
+          if [ "${#assets[@]}" -eq 0 ]; then
+            echo "No firmware files found for release" >&2
+            exit 1
+          fi
+
           ls -al /tmp/firmware
-          gh release create "$tag" /tmp/firmware/* \
+          ls -al /tmp/release-assets
+          gh release create "$tag" "${assets[@]}" \
             --title "$tag" \
             --notes "自动构建机型: ${BUILT_MODELS}"
