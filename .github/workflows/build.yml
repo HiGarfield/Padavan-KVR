@@ -358,9 +358,14 @@ jobs:
 
             for fw in "${firmware_files[@]}"; do
               fw_basename="$(basename "$fw")"
+              # Firmware filenames follow the format: PRODUCT_ID_<version>.trx
               # Replace the product-ID segment (everything before the first '_')
               # with the input model name, so the release filename is unique and
               # non-redundant even when two models share the same product ID.
+              if [[ "$fw_basename" != *_* ]]; then
+                echo "Unexpected firmware filename (no underscore separator): ${fw_basename}" >&2
+                exit 1
+              fi
               target="/tmp/release-assets/${model}_${fw_basename#*_}"
               cp "$fw" "$target"
             done
