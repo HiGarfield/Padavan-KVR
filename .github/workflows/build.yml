@@ -204,7 +204,7 @@ jobs:
               fi
 
               status=$?
-              if [ "$status" -ne 124 ]; then
+              if [ "$status" -ne 124 ] && [ "$status" -ne 137 ]; then
                 return "$status"
               fi
 
