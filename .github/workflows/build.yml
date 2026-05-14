@@ -193,7 +193,8 @@ jobs:
             local max_attempts=3
             local backoff=30
             local status=0
-            local -a cmd=(sudo apt-get "$@")
+            local -a cmd=(sudo apt-get)
+            cmd+=("$@")
 
             while [ "$attempt" -le "$max_attempts" ]; do
               if timeout --signal=TERM --kill-after=30s 15m "${cmd[@]}"; then
@@ -201,7 +202,11 @@ jobs:
               fi
 
               status=$?
-              if [ "$status" -ne 124 ] || [ "$attempt" -ge "$max_attempts" ]; then
+              if [ "$status" -ne 124 ]; then
+                return "$status"
+              fi
+
+              if [ "$attempt" -eq "$max_attempts" ]; then
                 return "$status"
               fi
 
