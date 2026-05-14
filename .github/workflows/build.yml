@@ -206,7 +206,7 @@ jobs:
               fi
 
               attempt=$((attempt + 1))
-              echo "apt-get timed out after 15 minutes, retrying in ${backoff}s (attempt $((attempt + 1))/${max_attempts})..."
+              echo "apt-get timed out after 15 minutes, retrying in ${backoff}s (attempt ${attempt}/${max_attempts})..."
               sleep "$backoff"
               backoff=$((backoff * 2))
             done
