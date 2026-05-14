@@ -188,11 +188,37 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo apt-get update
-          sudo apt-get -y install unzip libtool curl cmake gperf gawk flex bison nano xxd fakeroot \
-          cpio git python3-docutils gettext automake autopoint texinfo build-essential help2man \
-          pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses-dev libltdl-dev wget \
-          autoconf-archive
+          run_apt_get() {
+            local attempt=0
+            local max_attempts=3
+            local backoff=30
+            local status=0
+            local -a cmd=(sudo apt-get "$@")
+
+            while [ "$attempt" -lt "$max_attempts" ]; do
+              if timeout --signal=TERM --kill-after=30s 15m "${cmd[@]}"; then
+                return 0
+              fi
+
+              status=$?
+              if [ "$status" -ne 124 ] || [ "$attempt" -eq $((max_attempts - 1)) ]; then
+                return "$status"
+              fi
+
+              attempt=$((attempt + 1))
+              echo "apt-get timed out after 15 minutes, retrying in ${backoff}s (attempt $((attempt + 1))/${max_attempts})..."
+              sleep "$backoff"
+              backoff=$((backoff * 2))
+            done
+
+            return "$status"
+          }
+
+          run_apt_get update
+          run_apt_get -y install unzip libtool curl cmake gperf gawk flex bison nano xxd fakeroot \
+            cpio git python3-docutils gettext automake autopoint texinfo build-essential help2man \
+            pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses-dev libltdl-dev wget \
+            autoconf-archive
 
       - name: Cache toolchain
         uses: actions/cache@v5
