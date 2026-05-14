@@ -193,11 +193,13 @@ jobs:
             local max_attempts=3
             local backoff=30
             local status=0
+            local timeout_limit=15m
+            local kill_after=30s
             local -a cmd=(sudo apt-get)
             cmd+=("$@")
 
             while [ "$attempt" -le "$max_attempts" ]; do
-              if timeout --signal=TERM --kill-after=30s 15m "${cmd[@]}"; then
+              if timeout --signal=TERM --kill-after="$kill_after" "$timeout_limit" "${cmd[@]}"; then
                 return 0
               fi
 
@@ -210,7 +212,7 @@ jobs:
                 return "$status"
               fi
 
-              echo "apt-get timed out after 15 minutes, retrying in ${backoff}s (attempt $((attempt + 1))/${max_attempts})..."
+              echo "apt-get timed out after ${timeout_limit}, retrying in ${backoff}s (attempt $((attempt + 1))/${max_attempts})..."
               sleep "$backoff"
               backoff=$((backoff * 2))
               attempt=$((attempt + 1))
