@@ -188,11 +188,42 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo apt-get update
-          sudo apt-get -y install unzip libtool curl cmake gperf gawk flex bison nano xxd fakeroot \
-          cpio git python3-docutils gettext automake autopoint texinfo build-essential help2man \
-          pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses-dev libltdl-dev wget \
-          autoconf-archive
+          run_apt_get() {
+            local attempt=1
+            local max_attempts=3
+            local backoff=30
+            local status=0
+            local timeout_limit=15m
+            local kill_after=30s
+            local -a cmd=(sudo apt-get)
+            cmd+=("$@")
+
+            while [ "$attempt" -le "$max_attempts" ]; do
+              if timeout --signal=TERM --kill-after="$kill_after" "$timeout_limit" "${cmd[@]}"; then
+                return 0
+              fi
+
+              status=$?
+              if [ "$status" -ne 124 ] && [ "$status" -ne 137 ]; then
+                return "$status"
+              fi
+
+              if [ "$attempt" -eq "$max_attempts" ]; then
+                return "$status"
+              fi
+
+              echo "apt-get timed out after ${timeout_limit}, retrying in ${backoff}s (attempt $((attempt + 1))/${max_attempts})..."
+              sleep "$backoff"
+              backoff=$((backoff * 2))
+              attempt=$((attempt + 1))
+            done
+          }
+
+          run_apt_get update
+          run_apt_get -y install unzip libtool curl cmake gperf gawk flex bison nano xxd fakeroot \
+            cpio git python3-docutils gettext automake autopoint texinfo build-essential help2man \
+            pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses-dev libltdl-dev wget \
+            autoconf-archive
 
       - name: Cache toolchain
         uses: actions/cache@v5
