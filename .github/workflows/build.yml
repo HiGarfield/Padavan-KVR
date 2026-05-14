@@ -189,29 +189,27 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           run_apt_get() {
-            local attempt=0
+            local attempt=1
             local max_attempts=3
             local backoff=30
             local status=0
             local -a cmd=(sudo apt-get "$@")
 
-            while [ "$attempt" -lt "$max_attempts" ]; do
+            while [ "$attempt" -le "$max_attempts" ]; do
               if timeout --signal=TERM --kill-after=30s 15m "${cmd[@]}"; then
                 return 0
               fi
 
               status=$?
-              if [ "$status" -ne 124 ] || [ "$attempt" -eq $((max_attempts - 1)) ]; then
+              if [ "$status" -ne 124 ] || [ "$attempt" -ge "$max_attempts" ]; then
                 return "$status"
               fi
 
-              attempt=$((attempt + 1))
-              echo "apt-get timed out after 15 minutes, retrying in ${backoff}s (attempt ${attempt}/${max_attempts})..."
+              echo "apt-get timed out after 15 minutes, retrying in ${backoff}s (attempt $((attempt + 1))/${max_attempts})..."
               sleep "$backoff"
               backoff=$((backoff * 2))
+              attempt=$((attempt + 1))
             done
-
-            return "$status"
           }
 
           run_apt_get update
