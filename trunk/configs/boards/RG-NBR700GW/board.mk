@@ -5,4 +5,4 @@
 ##################################################################
 
 CFLAGS += -DBOARD_RG_NBR700GW
-BOARD_NUM_USB_PORTS=0
+BOARD_NUM_USB_PORTS=1

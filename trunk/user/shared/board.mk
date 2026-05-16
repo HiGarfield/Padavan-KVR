@@ -1,2 +1,8 @@
-CFLAGS += -DBOARD_CR660x -DBOARD_MT7915_DBDC
-BOARD_NUM_USB_PORTS=0
+##################################################################
+# Board PID    # Board Name       # PRODUCT # Note
+##################################################################
+# RG-NBR700GW # Ruijie RG-NBR700GW # MT7621 #
+##################################################################
+
+CFLAGS += -DBOARD_RG_NBR700GW
+BOARD_NUM_USB_PORTS=1
