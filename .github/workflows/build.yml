@@ -92,6 +92,7 @@ on:
           - XY-C1
           - YK-L1
           - ZTE_E8820S
+          - RG-NBR700GW
 
 permissions:
   contents: write
@@ -151,7 +152,7 @@ jobs:
 
           declare -a target_models
           if [ "$selected" = "All" ]; then
-            target_models=("${supported_models[@]}")
+            target_models=("${supported_models[@]}" "RT-AC85P-无插件")
           elif [ "$selected" = "RT-AC85P-无插件" ]; then
             target_models=("$selected")
           elif has_model "$selected"; then
