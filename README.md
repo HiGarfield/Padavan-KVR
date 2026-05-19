@@ -75,36 +75,20 @@ wifi密码
 
 # 一、ACTION一键自编译方法
 
-1、fork我的代码，从已经有的workflow里复制一个模版。或者直接找一个模版进行修改。
+1、fork 本仓库后，直接使用现成的 `.github/workflows/build.yml`，不需要新建 workflow 脚本。
 
-![1](https://github.com/fightroad/Padavan-KVR/assets/39027157/611c13d7-0b32-4eb1-80d8-6bebaaf6913c)
+2、进入 **Actions**，选择 **build** 工作流，点击 **Run workflow**。
 
-2、新建一个action脚本
+3、在 `model` 下拉框选择机型：
+- 选 **All**：并行编译 `trunk/configs/templates/*.config` 里的全部机型（不包含 `RT-AC85P-无插件`）。
+- 选单机型：只编译该机型。
 
-![2](https://github.com/fightroad/Padavan-KVR/assets/39027157/42120ab1-e245-4f04-a984-27f381e82565)
+4、如需增减插件，直接修改对应 `trunk/configs/templates/<机型>.config`。  
+如果选择的是 `RT-AC85P-无插件`，请修改 `trunk/configs/templates/RT-AC85P.config`（该选项会映射到 `RT-AC85P` 模板）。
+构建时会由工作流自动按机型 profile 做附加处理（如 `high/mid/lite/plain`），无需再手写旧版脚本。
 
-![3](https://github.com/fightroad/Padavan-KVR/assets/39027157/75cefd7d-fe60-40c8-87b1-1c250c98e425)
-
-![4](https://github.com/fightroad/Padavan-KVR/assets/39027157/a5c28213-3bbb-4ad5-872e-a3639acb6496)
-
-
-3、自定义自己的脚本，想要编译进去的软件直接按照编译脚本的模式增减。也可以直接修改template里面对应机型的配置。
-脚本里面按照提示，先写上删除配置项的语句，再写上要增加的插件的语句！！#为注释符号
-注意：action一键编译不会理会build_firmware_modify 脚本里面的配置。template里配置了和脚本里一样的配置会直接使用脚本里的！！！
-
-![配置1](https://github.com/fightroad/Padavan-KVR/assets/39027157/4bc31b0d-a1c8-4ed9-8ff7-f6babb060ba5)
-
-
-# 下图说的删除是指在那部分内容中增加删除配置的命令，不是把原来有的命令内容删掉！！！
-
-![image](https://github.com/fightroad/Padavan-KVR/assets/39027157/aed2259d-125d-4f71-bf4c-9e4fef141656)
-
-
-4、开始编译，获取编译后的固件
-
-![5](https://github.com/fightroad/Padavan-KVR/assets/39027157/15c6aed1-41b9-41e2-b13b-a5fd6063cbd6)
-
-![6](https://github.com/fightroad/Padavan-KVR/assets/39027157/9ab4089e-0eab-4728-8cdf-3960e503f640)
+5、编译完成后在当前 run 的 **Artifacts** 下载固件（名称形如 `firmware-机型`）；  
+工作流也会自动创建 release（tag 形如 `build-<run_id>-<run_attempt>`）并上传全部 `.trx` 固件。
 
 
 # 二、本地编译参照chongshengb的代码编译。增减插件修改 build_firmware_modify 脚本或直接修改template里面的机型配置。
@@ -128,4 +112,3 @@ https://github.com/chongshengB/rt-n56u
 https://github.com/padavanonly/rt-n56u
 
 https://github.com/immortalwrt/padavan
-
