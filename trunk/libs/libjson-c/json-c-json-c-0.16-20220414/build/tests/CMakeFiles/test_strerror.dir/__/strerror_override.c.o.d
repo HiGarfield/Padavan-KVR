@@ -1,0 +1,24 @@
+tests/CMakeFiles/test_strerror.dir/__/strerror_override.c.o: \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/trunk/libs/libjson-c/json-c-json-c-0.16-20220414/strerror_override.c \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/trunk/libs/libjson-c/json-c-json-c-0.16-20220414/strerror_override.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/trunk/libs/libjson-c/json-c-json-c-0.16-20220414/build/config.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/errno.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/features.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/bits/uClibc_config.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/sys/cdefs.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/bits/errno.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/linux/errno.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/asm/errno.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/asm-generic/errno-base.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/trunk/libs/libjson-c/json-c-json-c-0.16-20220414/json_object.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/trunk/libs/libjson-c/json-c-json-c-0.16-20220414/json_inttypes.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/trunk/libs/libjson-c/json-c-json-c-0.16-20220414/build/json_config.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/inttypes.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/lib/gcc/mipsel-linux-uclibc/7.4.0/include/stdint.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/stdint.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/bits/wchar.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/bits/wordsize.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/trunk/libs/libjson-c/json-c-json-c-0.16-20220414/json_types.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/trunk/libs/libjson-c/json-c-json-c-0.16-20220414/printbuf.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/lib/gcc/mipsel-linux-uclibc/7.4.0/include/stddef.h \
+ /home/runner/work/Padavan-KVR/Padavan-KVR/toolchain-mipsel/toolchain-3.4.x/mipsel-linux-uclibc/sysroot/usr/include/string.h
