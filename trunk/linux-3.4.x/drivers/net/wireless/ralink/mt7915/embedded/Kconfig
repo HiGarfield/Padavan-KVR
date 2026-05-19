@@ -126,7 +126,6 @@ config MT_DFS_SUPPORT
         bool "Dynamic Frequency Selection Support"	
         depends on WIFI_DRIVER
         default y
-
 #config WFA_VHT_R2_PF
 #    bool "WFA VHT R2 Plugfest"
 #    depends on DOT11_VHT_AC
@@ -515,4 +514,3 @@ if CHIP_MT7615E || CHIP_MT7622 || CHIP_MT7626 || CHIP_AXE || CHIP_MT7915
 		select HDR_TRANS_TX_SUPPORT
 		select HDR_TRANS_RX_SUPPORT
 endif
-
