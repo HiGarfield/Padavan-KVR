@@ -80,10 +80,11 @@ wifi密码
 2、进入 **Actions**，选择 **build** 工作流，点击 **Run workflow**。
 
 3、在 `model` 下拉框选择机型：
-- 选 **All**：并行编译 `trunk/configs/templates/*.config` 里的全部机型（并额外包含 `RT-AC85P-无插件`）。
+- 选 **All**：并行编译 `trunk/configs/templates/*.config` 里的全部机型（不包含 `RT-AC85P-无插件`）。
 - 选单机型：只编译该机型。
 
 4、如需增减插件，直接修改对应 `trunk/configs/templates/<机型>.config`。  
+如果选择的是 `RT-AC85P-无插件`，请修改 `trunk/configs/templates/RT-AC85P.config`（该选项会映射到 `RT-AC85P` 模板）。
 构建时会由工作流自动按机型 profile 做附加处理（如 `high/mid/lite/plain`），无需再手写旧版脚本。
 
 5、编译完成后在当前 run 的 **Artifacts** 下载固件（名称形如 `firmware-机型`）；  
