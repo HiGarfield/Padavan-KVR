@@ -51,7 +51,7 @@ void reset_lan6_vars(void)
 			inet_ntop(AF_INET6, &addr6, addr6s, INET6_ADDRSTRLEN);
 			if (lan_size6 < 48 || lan_size6 > 64)
 				lan_size6 = 64;
-			sprintf(addr6s, "%s/%d", addr6s, lan_size6);
+			snprintf(addr6s + strlen(addr6s), sizeof(addr6s) - strlen(addr6s), "/%d", lan_size6);
 		}
 	}
 
@@ -179,7 +179,7 @@ char *get_lan_addr6_prefix(char *p_addr6s)
 		if (ipv6_from_string(lan_addr6, &addr6) >= 0) {
 			ipv6_to_net(&addr6, 64);
 			if (inet_ntop(AF_INET6, &addr6, p_addr6s, INET6_ADDRSTRLEN) != NULL) {
-				sprintf(p_addr6s, "%s/%d", p_addr6s, 64);
+				snprintf(p_addr6s + strlen(p_addr6s), INET6_ADDRSTRLEN - strlen(p_addr6s), "/%d", 64);
 				return p_addr6s;
 			}
 		}

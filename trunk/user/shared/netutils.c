@@ -862,7 +862,7 @@ char *get_ifaddr6(const char *ifname, int linklocal, char *p_addr6s)
 			if (inet_ntop(ife->ifa_addr->sa_family, &addr6->sin6_addr, p_addr6s, INET6_ADDRSTRLEN) != NULL) {
 				prefix = get_prefix6_len((struct sockaddr_in6 *)ife->ifa_netmask);
 				if (prefix > 0 && prefix < 128)
-					sprintf(p_addr6s, "%s/%d", p_addr6s, prefix);
+					snprintf(p_addr6s + strlen(p_addr6s), INET6_ADDRSTRLEN - strlen(p_addr6s), "/%d", prefix);
 				ret = p_addr6s;
 				break;
 			}
@@ -901,7 +901,7 @@ char *get_ifaddr6(const char *ifname, int linklocal, char *p_addr6s)
 		if (inet_pton(AF_INET6, addr6s, &addr6) > 0 &&
 		    inet_ntop(AF_INET6, &addr6, p_addr6s, INET6_ADDRSTRLEN) != NULL) {
 			if (plen > 0 && plen < 128)
-				sprintf(p_addr6s, "%s/%d", p_addr6s, plen);
+				snprintf(p_addr6s + strlen(p_addr6s), INET6_ADDRSTRLEN - strlen(p_addr6s), "/%d", plen);
 			ret = p_addr6s;
 			break;
 		}

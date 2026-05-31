@@ -282,7 +282,7 @@ int ipv6_compact(const char *str6, char *p_comp6, int allow_prefix)
 
 	inet_ntop(AF_INET6, &addr6, p_comp6, INET6_ADDRSTRLEN);
 	if (allow_prefix && prefix_len > 0 && prefix_len < 128)
-		sprintf(p_comp6, "%s/%d", p_comp6, prefix_len);
+		snprintf(p_comp6 + strlen(p_comp6), INET6_ADDRSTRLEN - strlen(p_comp6), "/%d", prefix_len);
 
 	return 0;
 }
