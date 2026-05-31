@@ -57,18 +57,26 @@
 static char *
 fd2str(int fd, size_t chunk_size)
 {
-	char *buf = NULL;
-	size_t count = 0, n;
+	char *buf = NULL, *tmp;
+	size_t count = 0;
+	ssize_t n;
 
 	do {
-		buf = realloc(buf, count + chunk_size);
+		tmp = realloc(buf, count + chunk_size + 1);
+		if (!tmp) {
+			free(buf);
+			buf = NULL;
+			break;
+		}
+		buf = tmp;
 		n = read(fd, buf + count, chunk_size);
 		if (n < 0) {
 			free(buf);
 			buf = NULL;
+			break;
 		}
 		count += n;
-	} while (n == chunk_size);
+	} while (n == (ssize_t)chunk_size);
 
 	close(fd);
 	if (buf)
