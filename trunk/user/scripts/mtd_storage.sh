@@ -28,7 +28,7 @@ func_get_mtd()
 
 func_mdir()
 {
-	[ ! -d "$dir_storage" ] && mkdir -p -m 755 $dir_storage
+	[ ! -d "$dir_storage" ] && mkdir -p -m 755 "$dir_storage"
 }
 
 func_stop_apps()
@@ -57,7 +57,7 @@ func_load()
 		logger -t "Storage load" "Invalid storage data in MTD partition: $mtd_part_dev"
 	fi
 	rm -f $tmp
-	rm -f $slk
+	rm -f "$slk"
 }
 
 func_tarb()
@@ -79,7 +79,7 @@ func_save()
 
 	logger -t "Storage save" "Save storage files to MTD partition \"$mtd_part_dev\""
 	echo "Save storage files to MTD partition \"$mtd_part_dev\""
-	rm -f $tbz
+	rm -f "$tbz"
 	md5sum -c -s $hsh 2>/dev/null
 	if [ $? -eq 0 ] ; then
 		echo "Storage hash is not changed, skip write to MTD partition. Exit."
@@ -105,12 +105,12 @@ func_save()
 		logger -t "Storage save" "Invalid storage final data size: $fsz"
 	fi
 	rm -f $tmp
-	rm -f $tbz
+	rm -f "$tbz"
 }
 
 func_backup()
 {
-	rm -f $tbz
+	rm -f "$tbz"
 	bzip2 -9 $tmp 2>/dev/null
 	if [ $? -ne 0 ] ; then
 		result=1
@@ -128,7 +128,7 @@ func_restore()
 	fsz=`stat -c %s $tbz 2>/dev/null`
 	if [ -z "$fsz" ] || [ $fsz -lt 16 ] || [ $fsz -gt $mtd_part_size ] ; then
 		result=1
-		rm -f $tbz
+		rm -f "$tbz"
 		logger -t "Storage restore" "Invalid BZ2 file size: $fsz"
 		return 1
 	fi
@@ -139,14 +139,14 @@ func_restore()
 	tar xjf $tbz -C $tmp_storage 2>/dev/null
 	if [ $? -ne 0 ] ; then
 		result=1
-		rm -f $tbz
+		rm -f "$tbz"
 		rm -rf $tmp_storage
 		logger -t "Storage restore" "Unable to extract BZ2 file: $tbz"
 		return 1
 	fi
 	if [ ! -f "$tmp_storage/start_script.sh" ] ; then
 		result=1
-		rm -f $tbz
+		rm -f "$tbz"
 		rm -rf $tmp_storage
 		logger -t "Storage restore" "Invalid content of BZ2 file: $tbz"
 		return 1
@@ -154,10 +154,10 @@ func_restore()
 
 	func_stop_apps
 
-	rm -f $slk
-	rm -f $tbz
-	rm -rf $dir_storage
-	mkdir -p -m 755 $dir_storage
+	rm -f "$slk"
+	rm -f "$tbz"
+	rm -rf "$dir_storage"
+	mkdir -p -m 755 "$dir_storage"
 	cp -rf $tmp_storage /etc
 	rm -rf $tmp_storage
 
@@ -169,8 +169,8 @@ func_erase()
 	mtd_write erase $mtd_part_name
 	if [ $? -eq 0 ] ; then
 		rm -f $hsh
-		rm -rf $dir_storage
-		mkdir -p -m 755 $dir_storage
+		rm -rf "$dir_storage"
+		mkdir -p -m 755 "$dir_storage"
 		touch "$slk"
 	else
 		result=1
@@ -179,9 +179,9 @@ func_erase()
 
 func_reset()
 {
-	rm -f $slk
-	rm -rf $dir_storage
-	mkdir -p -m 755 $dir_storage
+	rm -f "$slk"
+	rm -rf "$dir_storage"
+	mkdir -p -m 755 "$dir_storage"
 }
 
 func_fill()
