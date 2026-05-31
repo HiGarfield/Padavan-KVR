@@ -69,7 +69,8 @@ static int create_client_fd(char* sock_path) {
     }
 
     remote.sun_family = AF_UNIX;
-    strcpy(remote.sun_path, sock_path);
+    strncpy(remote.sun_path, sock_path, sizeof(remote.sun_path) - 1);
+    remote.sun_path[sizeof(remote.sun_path) - 1] = '\0';
     len = strlen(remote.sun_path) + sizeof(remote.sun_family);
     if(-1 == connect(remote_fd, (struct sockaddr*)&remote, len)) {
         //perror("connect");
