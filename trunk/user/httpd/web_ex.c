@@ -2165,6 +2165,7 @@ do_dbconf(char *url, FILE *stream)
 		websWrite(stream,"var db_%s=(function() {\nvar o={};\n", name);
 		dbclient_list(&client, name, stream, db_print);
 		websWrite(stream,"return o;\n})();\n" );
+		free(name);
 	}
 	free(dup_pattern);
 	dbclient_end(&client);
