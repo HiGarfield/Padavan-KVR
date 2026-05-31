@@ -2152,6 +2152,8 @@ do_dbconf(char *url, FILE *stream)
 	char *dup_pattern = strdup(pattern);
 	char *sepstr = dup_pattern;
 	dbclient client;
+	if (!dup_pattern)
+		return;
 	dbclient_start(&client);
 	if(strstr(sepstr,delim)) {
 		for(name = strsep(&sepstr, delim); name != NULL; name = strsep(&sepstr, delim)) {
@@ -2161,11 +2163,9 @@ do_dbconf(char *url, FILE *stream)
 			websWrite(stream,"return o;\n})();\n" );
 		}
 	} else {
-		name= strdup(pattern);
-		websWrite(stream,"var db_%s=(function() {\nvar o={};\n", name);
-		dbclient_list(&client, name, stream, db_print);
+		websWrite(stream,"var db_%s=(function() {\nvar o={};\n", pattern);
+		dbclient_list(&client, pattern, stream, db_print);
 		websWrite(stream,"return o;\n})();\n" );
-		free(name);
 	}
 	free(dup_pattern);
 	dbclient_end(&client);
