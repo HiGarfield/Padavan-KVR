@@ -782,7 +782,7 @@ ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv)
 					else
 						websWrite(wp, "else ");
 
-					websWrite(wp, "if (pool == \"%s\") {\n", rindex(follow_partition->mount_point, '/')+1);
+					websWrite(wp, "if (pool == \"%s\") {\n", rindex(follow_partition->mount_point, '/') ? rindex(follow_partition->mount_point, '/')+1 : follow_partition->mount_point);
 
 					websWrite(wp, "	    return [");
 
@@ -921,7 +921,8 @@ ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv)
 			if (follow_partition->mount_point == NULL || strlen(follow_partition->mount_point) <= 0)
 				continue;
 
-			pool_mount_dir = rindex(follow_partition->mount_point, '/')+1;
+			pool_mount_dir = rindex(follow_partition->mount_point, '/');
+			pool_mount_dir = pool_mount_dir ? pool_mount_dir + 1 : follow_partition->mount_point;
 
 			if (layer == 1) { // get pools.
 				dir2 = opendir(follow_partition->mount_point);
