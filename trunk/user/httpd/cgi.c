@@ -38,7 +38,7 @@ unescape(char *s)
 		if (*s == '%') {
 			sscanf(s + 1, "%02x", &c);
 			*s++ = (char) c;
-			strncpy(s, s + 2, strlen(s) + 1);
+			memmove(s, s + 2, strlen(s + 2) + 1);
 		}
 		/* Space is special */
 		else if (*s == '+')
