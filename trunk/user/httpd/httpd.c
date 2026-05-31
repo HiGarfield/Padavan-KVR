@@ -887,7 +887,7 @@ handle_request(FILE *conn_fp, const conn_item_t *item)
 		else if (strncasecmp( cur, "Content-Length:", 15) == 0) {
 			cp = cur + 15;
 			cp += strspn( cp, " \t" );
-			clen = strtoul( cp, NULL, 0 );
+			clen = strtol( cp, NULL, 0 );
 			if ((clen < 0) || (clen > 50000000)) {
 				send_error( 400, "Bad Request", NULL, "Content length invalid.", conn_fp);
 				return;
