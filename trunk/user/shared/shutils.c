@@ -116,7 +116,8 @@ void time_zone_x_mapping()
 	char tmpstr[32];
 	char *ptr;
 
-	strcpy(tmpstr, nvram_safe_get("time_zone"));
+	strncpy(tmpstr, nvram_safe_get("time_zone"), sizeof(tmpstr) - 1);
+	tmpstr[sizeof(tmpstr) - 1] = '\0';
 
 	/* replace . with : */
 	if ((ptr=strchr(tmpstr, '.'))!=NULL) *ptr = ':';
