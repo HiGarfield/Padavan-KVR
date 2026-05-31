@@ -11,7 +11,7 @@ while true ;do
 
 	if [ -z "$process_status" ] ;then
 		echo "Build script is exited"
-		if [ -f ./images/*.trx ]; then
+		if ls ./images/*.trx 1> /dev/null 2>&1; then
 			tail -20 build.log && exit 0
 		else
 			tail -60 build.log && exit 1
