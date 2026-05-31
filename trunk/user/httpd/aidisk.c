@@ -782,7 +782,10 @@ ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv)
 					else
 						websWrite(wp, "else ");
 
-					websWrite(wp, "if (pool == \"%s\") {\n", rindex(follow_partition->mount_point, '/') ? rindex(follow_partition->mount_point, '/')+1 : follow_partition->mount_point);
+					{
+						char *slash = rindex(follow_partition->mount_point, '/');
+						websWrite(wp, "if (pool == \"%s\") {\n", slash ? slash + 1 : follow_partition->mount_point);
+					}
 
 					websWrite(wp, "	    return [");
 

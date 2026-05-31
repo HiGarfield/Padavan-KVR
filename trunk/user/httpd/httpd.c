@@ -885,13 +885,15 @@ handle_request(FILE *conn_fp, const conn_item_t *item)
 			cur = cp + strlen(cp) + 1;
 		}
 		else if (strncasecmp( cur, "Content-Length:", 15) == 0) {
+			long clen_l;
 			cp = cur + 15;
 			cp += strspn( cp, " \t" );
-			clen = strtol( cp, NULL, 0 );
-			if ((clen < 0) || (clen > 50000000)) {
+			clen_l = strtol( cp, NULL, 0 );
+			if ((clen_l < 0) || (clen_l > 50000000)) {
 				send_error( 400, "Bad Request", NULL, "Content length invalid.", conn_fp);
 				return;
 			}
+			clen = (int)clen_l;
 		}
 		else if (strncasecmp( cur, "If-Modified-Since:", 18) == 0) {
 			cp = cur + 18;
