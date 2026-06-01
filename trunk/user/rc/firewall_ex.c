@@ -162,6 +162,7 @@ filter_conv(char *proto, char *flag, char *srcip, char *srcport, char *dstip, ch
 	char newstr[128];
 	size_t avail = g_buf_avail();
 	size_t pos = 0;
+	int n;
 
 	if (avail == 0)
 		return g_buf;
@@ -169,13 +170,15 @@ filter_conv(char *proto, char *flag, char *srcip, char *srcport, char *dstip, ch
 
 	if (strcmp(proto, "") != 0) {
 		snprintf(newstr, sizeof(newstr), " -p %s", proto);
-		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		n = snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (n > 0) pos += (size_t)n;
 		if (pos >= avail) pos = avail - 1;
 	}
 
 	if (strcmp(flag, "") != 0) {
 		snprintf(newstr, sizeof(newstr), " --tcp-flags %s %s", flag, flag);
-		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		n = snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (n > 0) pos += (size_t)n;
 		if (pos >= avail) pos = avail - 1;
 	}
 
@@ -184,13 +187,15 @@ filter_conv(char *proto, char *flag, char *srcip, char *srcport, char *dstip, ch
 			snprintf(newstr, sizeof(newstr), " --src-range %s", srcip);
 		else
 			snprintf(newstr, sizeof(newstr), " -s %s", srcip);
-		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		n = snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (n > 0) pos += (size_t)n;
 		if (pos >= avail) pos = avail - 1;
 	}
 
 	if (strcmp(srcport, "") != 0) {
 		snprintf(newstr, sizeof(newstr), " --sport %s", srcport);
-		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		n = snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (n > 0) pos += (size_t)n;
 		if (pos >= avail) pos = avail - 1;
 	}
 
@@ -199,13 +204,15 @@ filter_conv(char *proto, char *flag, char *srcip, char *srcport, char *dstip, ch
 			snprintf(newstr, sizeof(newstr), " --dst-range %s", dstip);
 		else
 			snprintf(newstr, sizeof(newstr), " -d %s", dstip);
-		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		n = snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (n > 0) pos += (size_t)n;
 		if (pos >= avail) pos = avail - 1;
 	}
 
 	if (strcmp(dstport, "") != 0) {
 		snprintf(newstr, sizeof(newstr), " --dport %s", dstport);
-		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		n = snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (n > 0) pos += (size_t)n;
 		if (pos >= avail) pos = avail - 1;
 	}
 
