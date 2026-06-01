@@ -50,6 +50,15 @@ g_buf_init()
 	g_buf_pool[0] = 0;
 }
 
+static size_t
+g_buf_avail(void)
+{
+	size_t used = (size_t)(g_buf - g_buf_pool);
+	if (used >= sizeof(g_buf_pool))
+		return 0;
+	return sizeof(g_buf_pool) - used;
+}
+
 static char *
 g_buf_alloc(char *g_buf_now)
 {
@@ -90,7 +99,7 @@ protoflag_conv(const char *proto_name, int idx, int isFlag)
 	snprintf(itemname_arr, sizeof(itemname_arr), "%s%d", proto_name, idx);
 	proto = nvram_safe_get(itemname_arr);
 
-	strcpy(g_buf, "");
+	g_buf[0] = '\0';
 
 	if (!isFlag) {
 		if (!strncasecmp(proto, "UDP", 3))
@@ -101,7 +110,7 @@ protoflag_conv(const char *proto_name, int idx, int isFlag)
 			strcpy(g_buf, "tcp");
 	} else {
 		if (strlen(proto)>3 && !strncasecmp(proto, "TCP", 3))
-			strcpy(g_buf, proto+4);
+			snprintf(g_buf, g_buf_avail(), "%s", proto+4);
 	}
 
 	return (g_buf_alloc(g_buf));
@@ -113,7 +122,7 @@ portrange_conv(const char *port_name, int idx)
 	char itemname_arr[32];
 
 	snprintf(itemname_arr, sizeof(itemname_arr), "%s%d", port_name, idx);
-	strcpy(g_buf, nvram_safe_get(itemname_arr));
+	snprintf(g_buf, g_buf_avail(), "%s", nvram_safe_get(itemname_arr));
 
 	return (g_buf_alloc(g_buf));
 }
@@ -124,7 +133,7 @@ ip_conv(const char *ip_name, int idx)
 	char itemname_arr[32];
 
 	snprintf(itemname_arr, sizeof(itemname_arr), "%s%d", ip_name, idx);
-	strcpy(g_buf, nvram_safe_get(itemname_arr));
+	snprintf(g_buf, g_buf_avail(), "%s", nvram_safe_get(itemname_arr));
 
 	return (g_buf_alloc(g_buf));
 }
@@ -135,7 +144,7 @@ general_conv(const char *ip_name, int idx)
 	char itemname_arr[32];
 
 	snprintf(itemname_arr, sizeof(itemname_arr), "%s%d", ip_name, idx);
-	strcpy(g_buf, nvram_safe_get(itemname_arr));
+	snprintf(g_buf, g_buf_avail(), "%s", nvram_safe_get(itemname_arr));
 
 	return (g_buf_alloc(g_buf));
 }
@@ -144,17 +153,21 @@ static char *
 filter_conv(char *proto, char *flag, char *srcip, char *srcport, char *dstip, char *dstport)
 {
 	char newstr[128];
+	size_t avail = g_buf_avail();
+	size_t pos = 0;
 
-	strcpy(g_buf, "");
+	g_buf[0] = '\0';
 
 	if (strcmp(proto, "") != 0) {
 		snprintf(newstr, sizeof(newstr), " -p %s", proto);
-		strcat(g_buf, newstr);
+		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (pos >= avail) pos = avail - 1;
 	}
 
 	if (strcmp(flag, "") != 0) {
 		snprintf(newstr, sizeof(newstr), " --tcp-flags %s %s", flag, flag);
-		strcat(g_buf, newstr);
+		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (pos >= avail) pos = avail - 1;
 	}
 
 	if (strcmp(srcip, "") != 0) {
@@ -162,12 +175,14 @@ filter_conv(char *proto, char *flag, char *srcip, char *srcport, char *dstip, ch
 			snprintf(newstr, sizeof(newstr), " --src-range %s", srcip);
 		else
 			snprintf(newstr, sizeof(newstr), " -s %s", srcip);
-		strcat(g_buf, newstr);
+		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (pos >= avail) pos = avail - 1;
 	}
 
 	if (strcmp(srcport, "") != 0) {
 		snprintf(newstr, sizeof(newstr), " --sport %s", srcport);
-		strcat(g_buf, newstr);
+		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (pos >= avail) pos = avail - 1;
 	}
 
 	if (strcmp(dstip, "") != 0) {
@@ -175,12 +190,14 @@ filter_conv(char *proto, char *flag, char *srcip, char *srcport, char *dstip, ch
 			snprintf(newstr, sizeof(newstr), " --dst-range %s", dstip);
 		else
 			snprintf(newstr, sizeof(newstr), " -d %s", dstip);
-		strcat(g_buf, newstr);
+		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (pos >= avail) pos = avail - 1;
 	}
 
 	if (strcmp(dstport, "") != 0) {
 		snprintf(newstr, sizeof(newstr), " --dport %s", dstport);
-		strcat(g_buf, newstr);
+		pos += snprintf(g_buf + pos, avail - pos, "%s", newstr);
+		if (pos >= avail) pos = avail - 1;
 	}
 
 	return (g_buf_alloc(g_buf));
