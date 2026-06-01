@@ -887,8 +887,8 @@ ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv)
 		*follow_info_end = backup;
 
 		if (layer == 3) {
-			memset(folder_code, 0, 1024);
-			strcpy(folder_code, follow_info);
+			memset(folder_code, 0, sizeof(folder_code));
+			strlcpy(folder_code, follow_info, sizeof(folder_code));
 		}
 
 		follow_info = follow_info_end;
