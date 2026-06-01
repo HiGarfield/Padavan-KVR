@@ -95,22 +95,26 @@ protoflag_conv(const char *proto_name, int idx, int isFlag)
 {
 	char *proto;
 	char itemname_arr[32];
+	size_t avail;
 
 	snprintf(itemname_arr, sizeof(itemname_arr), "%s%d", proto_name, idx);
 	proto = nvram_safe_get(itemname_arr);
 
+	avail = g_buf_avail();
+	if (avail == 0)
+		return g_buf;
 	g_buf[0] = '\0';
 
 	if (!isFlag) {
 		if (!strncasecmp(proto, "UDP", 3))
-			strcpy(g_buf, "udp");
+			snprintf(g_buf, avail, "udp");
 		else if (!strncasecmp(proto, "OTHER", 5))
-			strcpy(g_buf, "other");
+			snprintf(g_buf, avail, "other");
 		else
-			strcpy(g_buf, "tcp");
+			snprintf(g_buf, avail, "tcp");
 	} else {
 		if (strlen(proto)>3 && !strncasecmp(proto, "TCP", 3))
-			snprintf(g_buf, g_buf_avail(), "%s", proto+4);
+			snprintf(g_buf, avail, "%s", proto+4);
 	}
 
 	return (g_buf_alloc(g_buf));
@@ -156,6 +160,8 @@ filter_conv(char *proto, char *flag, char *srcip, char *srcport, char *dstip, ch
 	size_t avail = g_buf_avail();
 	size_t pos = 0;
 
+	if (avail == 0)
+		return g_buf;
 	g_buf[0] = '\0';
 
 	if (strcmp(proto, "") != 0) {
