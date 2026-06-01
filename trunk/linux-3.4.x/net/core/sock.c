@@ -582,10 +582,11 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
 			val = sysctl_wmem_max;
 set_sndbuf:
 		sk->sk_userlocks |= SOCK_SNDBUF_LOCK;
-		/* val is capped to a positive value via max_t below.
-		 * Ensure val * 2 fits in an int and is at least SOCK_MIN_SNDBUF.
+		/* Clamp val to [0, INT_MAX/2] so that val * 2 neither
+		 * overflows nor wraps, and is at least SOCK_MIN_SNDBUF.
 		 */
 		val = min_t(int, val, INT_MAX / 2);
+		val = max_t(int, val, 0);
 		sk->sk_sndbuf = max_t(int, val * 2, SOCK_MIN_SNDBUF);
 
 		/*
@@ -628,6 +629,7 @@ set_rcvbuf:
 		 * is the most desirable behavior.
 		 */
 		val = min_t(int, val, INT_MAX / 2);
+		val = max_t(int, val, 0);
 		sk->sk_rcvbuf = max_t(int, val * 2, SOCK_MIN_RCVBUF);
 		break;
 
