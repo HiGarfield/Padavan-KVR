@@ -340,6 +340,8 @@ int ipv6_recv_error(struct sock *sk, struct msghdr *msg, int len, int *addr_len)
 	int err;
 	int copied;
 
+	memset(&errhdr, 0, sizeof(errhdr));
+
 	err = -EAGAIN;
 	skb = skb_dequeue(&sk->sk_error_queue);
 	if (skb == NULL)
