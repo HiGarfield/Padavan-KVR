@@ -54,8 +54,11 @@ static size_t
 g_buf_avail(void)
 {
 	size_t used = (size_t)(g_buf - g_buf_pool);
-	if (used >= sizeof(g_buf_pool))
+	if (used >= sizeof(g_buf_pool)) {
+		g_buf = &g_buf_pool[sizeof(g_buf_pool) - 1];
+		*g_buf = '\0';
 		return 0;
+	}
 	return sizeof(g_buf_pool) - used;
 }
 
