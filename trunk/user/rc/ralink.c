@@ -1302,9 +1302,9 @@ gen_ralink_config(int is_soc_ap, int is_aband, int disable_autoscan)
 	i_val = nvram_wlan_get_int(is_aband, "HT_80211R");
 	#if defined (BOARD_MT7915_DBDC)
 	if (is_aband)
-	{fprintf(fp, "FtSupport=%d;%d\n",i_val);}
+	{fprintf(fp, "FtSupport=%d;%d\n",i_val,i_val);}
 	else
-	{fprintf(fp, "FtSupport=%d;%d\n",i_val);}
+	{fprintf(fp, "FtSupport=%d;%d\n",i_val,i_val);}
 	fprintf(fp, "FtOtd=0;0\n");
 	fprintf(fp, "FtRic=1;1\n");
 	#else 
