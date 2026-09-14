@@ -198,7 +198,10 @@ check_existed_share(const char *string)
 		return 0;
 
 	if(string == NULL || strlen(string) <= 0)
+	{
+		fclose(tp);
 		return 0;
+	}
 
 	sprintf(target, "[%s]", string);
 
