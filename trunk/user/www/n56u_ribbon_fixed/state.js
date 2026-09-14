@@ -538,10 +538,10 @@ tabMenuHash.put('10', tabM9);
 var menuL1 = [
 	{ "title": "<#menu1#>", "link": "index.asp", "icon": "icon-home" }
 ];
-if (found_app_vpnsvr()) {
+if (found_app_ovpn()) {
 	menuL1.push({ "title": "<#menu2#>", "link": "vpnsrv.asp", "icon": "icon-retweet" });
 }
-if (found_app_vpncli()) {
+if (found_app_ovpn()) {
 	menuL1.push({ "title": "<#menu6#>", "link": "vpncli.asp", "icon": "icon-globe" });
 }
 menuL1.push({ "title": "<#menu4#>", "link": "Main_TrafficMonitor_realtime.asp", "icon": "icon-tasks" });
