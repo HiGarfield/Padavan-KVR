@@ -73,7 +73,7 @@ rm -rf /etc/storage/dnsmasq/dns;cd /etc
 mkdir -p /etc/storage/dnsmasq/dns/conf
 hosts_ad=`nvram get hosts_ad`
 tv_hosts=`nvram get tv_hosts`
-if [ "$koolproxy_enable"="1" ] ; then
+if [ "$koolproxy_enable" = "1" ] ; then
 if [ "$hosts_ad" = "1" ] ; then
 sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
 cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
