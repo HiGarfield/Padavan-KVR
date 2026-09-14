@@ -375,12 +375,20 @@ jobs:
           mkdir -p /tmp/release-assets
           artifact_dirs=(/tmp/firmware/firmware-*)
           if [ "${#artifact_dirs[@]}" -eq 0 ]; then
+            # actions/download-artifact 在 pattern 只匹配到单个 artifact 时，会把内容直接
+            # 解压到 path 根目录，不再创建 firmware-<model>/ 子目录（单机型 dispatch 场景）
+            artifact_dirs=(/tmp/firmware)
+          fi
+          if [ ! -d "${artifact_dirs[0]}" ]; then
             echo "No downloaded artifact directories found under /tmp/firmware" >&2
             exit 1
           fi
 
           for artifact_dir in "${artifact_dirs[@]}"; do
             model="${artifact_dir#/tmp/firmware/firmware-}"
+            if [ "$model" = "$artifact_dir" ]; then
+              model="$BUILT_MODELS"
+            fi
             firmware_files=("$artifact_dir"/*.trx)
             if [ "${#firmware_files[@]}" -eq 0 ]; then
               echo "No .trx files found in ${artifact_dir}" >&2
