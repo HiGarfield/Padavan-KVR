@@ -3946,7 +3946,7 @@ nvram_add_group_table(webs_t wp, char *serviceId, struct variable *v, int count)
     	if (fieldCount==0)
     	   sprintf(bufs, "%s", buf);
     	else
-    	   snprintf(bufs, sizeof(bufs), "%s%s", bufs, buf);
+    	   snprintf(bufs + strlen(bufs), sizeof(bufs) - strlen(bufs), "%s", buf);
     	
     	fieldCount++;
     }

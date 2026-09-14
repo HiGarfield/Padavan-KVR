@@ -993,7 +993,7 @@ ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv)
 				}
 
 				if (folder_count1 == folder_order)
-					snprintf(dir1_Path, sizeof(dir1_Path), "%s/%s", dir1_Path, dp1->d_name);
+					snprintf(dir1_Path + strlen(dir1_Path), sizeof(dir1_Path) - strlen(dir1_Path), "/%s", dp1->d_name);
 			}
 			closedir(dir1);
 		}
@@ -1046,7 +1046,7 @@ ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv)
 			}
 
 			if (folder_count1 == folder_order)
-				snprintf(dir1_Path, sizeof(dir1_Path), "%s/%s", dir1_Path, dp1->d_name);
+				snprintf(dir1_Path + strlen(dir1_Path), sizeof(dir1_Path) - strlen(dir1_Path), "/%s", dp1->d_name);
 		}
 		closedir(dir1);
 		--layer;
