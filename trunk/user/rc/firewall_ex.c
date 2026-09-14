@@ -2230,6 +2230,11 @@ start_firewall_ex(void)
 	if (check_if_file_exist(shadowsocks_iptables_script))
 		doSystem("sh %s", shadowsocks_iptables_script);
 #endif
+#if defined (APP_ZEROTIER)
+	/* zerotier 规则由 zerotier.sh 追加，iptables-restore 会清掉，此处按先例重放 */
+	if (nvram_match("zerotier_enable", "1"))
+		doSystem("/usr/bin/zerotier.sh %s", "rules");
+#endif
 	if (check_if_file_exist(int_iptables_script))
 		doSystem("%s", int_iptables_script);
 

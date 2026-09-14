@@ -114,6 +114,15 @@ start)
 stop)
 	stop_zero
 	;;
+rules)
+	# 防火墙重放入口(供 restart_firewall 调用)：zt 接口不存在时立即返回，
+	# 避免走进 rules() 的等待循环而阻塞防火墙重建流程
+	if [ -z "$(ifconfig | grep zt | awk '{print $1}')" ]; then
+		logger -t "zerotier" "zt接口未就绪，跳过防火墙规则重放"
+		exit 0
+	fi
+	rules
+	;;
 *)
 	echo "check"
 	#exit 0
