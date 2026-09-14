@@ -349,9 +349,8 @@ start_AD() {
 	else
 		logger -t "SS" "AD文件下载成功"
 		if [ -f "/tmp/adnew.conf" ]; then
-			check = `grep -wq "address=" /tmp/adnew.conf`
-	  		if [ ! -n "$check" ] ; then
-	    			cp /tmp/adnew.conf /tmp/dnsmasq.dom/ad.conf
+			if grep -q "address=" /tmp/adnew.conf ; then
+	  			cp /tmp/adnew.conf /tmp/dnsmasq.dom/ad.conf
 	  		else
 			    cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/ad.conf
 			fi
