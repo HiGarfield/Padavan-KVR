@@ -62,7 +62,7 @@ rules() {
 	iptables -A INPUT -i $zt0 -j ACCEPT
 	iptables -A FORWARD -i $zt0 -o $zt0 -j ACCEPT
 	iptables -A FORWARD -i $zt0 -j ACCEPT
-	if [ $nat_enable -eq 1 ]; then
+	if [ "$nat_enable" = "1" ]; then
 		iptables -t nat -A POSTROUTING -o $zt0 -j MASQUERADE
 		while [ "$(ip route | grep -E "dev\s+$zt0\s+proto\s+kernel"| awk '{print $1}')" = "" ]; do
 		    sleep 1
