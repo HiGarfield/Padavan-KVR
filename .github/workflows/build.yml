@@ -169,7 +169,7 @@ jobs:
             json="$(jq -c --argjson item "$item" '. + [$item]' <<<"$json")"
           done
 
-          models="$(printf '%s\n' "${target_models[@]}" | paste -sd ', ' -)"
+          models="$(printf '%s\n' "${target_models[@]}" | paste -sd ',' -)"
           echo "matrix=$json" >> "$GITHUB_OUTPUT"
           echo "models=$models" >> "$GITHUB_OUTPUT"
 
