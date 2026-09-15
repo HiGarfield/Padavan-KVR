@@ -913,7 +913,8 @@ BOOLEAN IAPP_IoctlToWLAN(
 
 
 #ifdef IAPP_OS_LINUX
-	if (strlen(pCtrlBK->IfNameWlanIoctl[ApIdx]) >= sizeof(IfName))
+	if ((ApIdx >= MAX_WIFI_COUNT) ||
+		(strlen(pCtrlBK->IfNameWlanIoctl[ApIdx]) >= sizeof(IfName)))
 		strcpy(IfName, FT_KDP_DEFAULT_IF_WLAN_IOCTL);
 	else
 		strcpy(IfName, pCtrlBK->IfNameWlanIoctl[ApIdx]);
