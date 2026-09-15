@@ -428,7 +428,9 @@ nvram_convert_old_params(void)
 static void
 nvram_convert_misc_values(void)
 {
-	char buff[64];
+	/* char_to_ascii() emits up to 3 bytes per input byte; the SSID is
+	 * capped at 32 characters by the WebUI, so 3*32+1 bytes are needed. */
+	char buff[128];
 	int sw_mode;
 #if defined (BOARD_GPIO_BTN_ROUTER)
 	int i_router_switch = BTN_PRESSED;
@@ -472,7 +474,7 @@ nvram_convert_misc_values(void)
 		nvram_wlan_set(1, "ssid", DEF_WLAN_5G_SSID);
 
 	memset(buff, 0, sizeof(buff));
-	char_to_ascii(buff, nvram_wlan_get(1, "ssid"));
+	char_to_ascii(buff, sizeof(buff), nvram_wlan_get(1, "ssid"));
 	nvram_wlan_set(1, "ssid2", buff);
 
 	if (strlen(nvram_wlan_get(1, "wpa_mode")) < 1)
@@ -503,7 +505,7 @@ nvram_convert_misc_values(void)
 		nvram_wlan_set(0, "ssid", DEF_WLAN_2G_SSID);
 
 	memset(buff, 0, sizeof(buff));
-	char_to_ascii(buff, nvram_wlan_get(0, "ssid"));
+	char_to_ascii(buff, sizeof(buff), nvram_wlan_get(0, "ssid"));
 	nvram_wlan_set(0, "ssid2", buff);
 
 	if (strlen(nvram_wlan_get(0, "gmode")) < 1)
