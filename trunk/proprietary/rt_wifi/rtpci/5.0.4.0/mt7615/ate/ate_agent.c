@@ -2350,7 +2350,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		if (strlen(val)) {
 			pfmuId = simple_strtol(val, 0, 10);
 
-			if (!(pfmuId >= 0x00 || pfmuId <= 0x3f)) {
+			if (!(pfmuId >= 0x00 && pfmuId <= 0x3f)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid PFMU idx(%s), use default\n",
 						  __func__, (val == NULL ? "" : val)));
@@ -2372,7 +2372,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		if (strlen(val)) {
 			aid = simple_strtol(val, 0, 10);
 
-			if (!(aid >= 0x00 || aid <= 2007)) {
+			if (!(aid >= 0x00 && aid <= 2007)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid aid(%s), use default\n",
 						  __func__, (val == NULL ? "" : val)));
@@ -2394,7 +2394,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		if (strlen(val)) {
 			speIdx = simple_strtol(val, 0, 10);
 
-			if (!(speIdx >= 0 || speIdx <= 30)) {
+			if (!(speIdx >= 0 && speIdx <= 30)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid SPE idx(%s), use default\n",
 						  __func__, (val == NULL ? "" : val)));
@@ -2530,7 +2530,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		if (strlen(val)) {
 			mcsSupport = simple_strtol(val, 0, 10);
 
-			if (!(mcsSupport >= 0 || mcsSupport <= 3)) {
+			if (!(mcsSupport >= 0 && mcsSupport <= 3)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid rxmcsnss1(%s), use default\n",
 						  __func__, (val == NULL ? "" : val)));
@@ -2551,7 +2551,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		if (strlen(val)) {
 			mcsSupport = simple_strtol(val, 0, 10);
 
-			if (!(mcsSupport >= 0 || mcsSupport <= 3)) {
+			if (!(mcsSupport >= 0 && mcsSupport <= 3)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid rxmcsnss2(%s), use default\n",
 						  __func__, (val == NULL ? "" : val)));
@@ -2572,7 +2572,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		if (strlen(val)) {
 			mcsSupport = simple_strtol(val, 0, 10);
 
-			if (!(mcsSupport >= 0 || mcsSupport <= 3)) {
+			if (!(mcsSupport >= 0 && mcsSupport <= 3)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid rxmcsnss3(%s), use default\n",
 						  __func__, (val == NULL ? "" : val)));
@@ -2593,7 +2593,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		if (strlen(val)) {
 			mcsSupport = simple_strtol(val, 0, 10);
 
-			if (!(mcsSupport >= 0 || mcsSupport <= 3)) {
+			if (!(mcsSupport >= 0 && mcsSupport <= 3)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid rxmcsnss4(%s), use default\n",
 						  __func__, (val == NULL ? "" : val)));
@@ -2637,7 +2637,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		if (strlen(val)) {
 			bFeeNsts = simple_strtol(val, 0, 10);
 
-			if (!(bFeeNsts >= 0 || bFeeNsts < 4)) {
+			if (!(bFeeNsts >= 0 && bFeeNsts < 4)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid bfeensts(%s), use default\n",
 						  __func__, (val == NULL ? "" : val)));
