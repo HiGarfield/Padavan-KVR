@@ -520,7 +520,12 @@ static BOOLEAN IAPP_ArgumentParse(
 
 			if (Argc > 0)
 			{
-				strcpy(pCtrlBK->IfNameWlanIoctl[pCtrlBK->IfNameWlanCount++], pArgv[0]);
+				if (pCtrlBK->IfNameWlanCount < MAX_WIFI_COUNT)
+				{
+					snprintf(pCtrlBK->IfNameWlanIoctl[pCtrlBK->IfNameWlanCount],
+							 sizeof(pCtrlBK->IfNameWlanIoctl[0]), "%s", pArgv[0]);
+					pCtrlBK->IfNameWlanCount++;
+				}
 				IAPP_AGP_CMD_PARSE_NEXT_ONE;
 			} /* End of if */
 		}
