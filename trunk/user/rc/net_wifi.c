@@ -820,6 +820,20 @@ int is_need_8021x(char *auth_mode)
 	return 0;
 }
 
+/* valid range 0 (off) .. -100 dBm, values outside are silently ignored */
+static void
+set_wifi_rssi_threshold(const char *ifname, int is_aband)
+{
+	int kickrssi = nvram_wlan_get_int(is_aband, "KickStaRssiLow");
+	int assocrssi = nvram_wlan_get_int(is_aband, "AssocReqRssiThres");
+
+	if (kickrssi <= 0 && kickrssi >= -100)
+		doSystem("iwpriv %s set %s=%d", ifname, "KickStaRssiLow", kickrssi);
+
+	if (assocrssi <= 0 && assocrssi >= -100)
+		doSystem("iwpriv %s set %s=%d", ifname, "AssocReqRssiThres", assocrssi);
+}
+
 void
 start_8021x_wl(void)
 {
@@ -836,10 +850,7 @@ start_8021x_wl(void)
 	if (!wifname)
 		return;
 
-	int wl_KickStaRssiLow = nvram_get_int("wl_KickStaRssiLow");
-	int wl_AssocReqRssiThres = nvram_get_int("wl_AssocReqRssiThres");
-	doSystem("iwpriv %s set %s=%d", wifname, "KickStaRssiLow", wl_KickStaRssiLow);
-	doSystem("iwpriv %s set %s=%d", wifname, "AssocReqRssiThres", wl_AssocReqRssiThres);
+	set_wifi_rssi_threshold(wifname, 1);
 }
 
 void
@@ -857,10 +868,7 @@ start_8021x_rt(void)
 	if (!wifname)
 		return;
 
-	int rt_KickStaRssiLow = nvram_get_int("rt_KickStaRssiLow");
-	int rt_AssocReqRssiThres = nvram_get_int("rt_AssocReqRssiThres");
-	doSystem("iwpriv %s set %s=%d", wifname, "KickStaRssiLow", rt_KickStaRssiLow);
-	doSystem("iwpriv %s set %s=%d", wifname, "AssocReqRssiThres", rt_AssocReqRssiThres);
+	set_wifi_rssi_threshold(wifname, 0);
 }
 
 void
