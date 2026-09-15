@@ -90,6 +90,11 @@ static int read_to_buf(const char *filename, void *buf)
 void* xzalloc(size_t size)
 {
         void *ptr = malloc(size);
+
+        if (!ptr) {
+                perror("xzalloc: out of memory");
+                exit(EXIT_FAILURE);
+        }
         memset(ptr, 0, size);
         return ptr;
 }
