@@ -360,7 +360,7 @@ static INT32 HQA_SetChannel(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
-	UINT32 Value;
+	UINT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -435,7 +435,7 @@ static INT32 HQA_SetSystemBW(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
-	UINT32 Value;
+	UINT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -519,7 +519,7 @@ static INT32 HQA_SetTssiOnOff(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
-	INT32 Value = 0, WFSel;
+	INT32 Value = 0, WFSel = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -1062,7 +1062,7 @@ static INT32 HQA_CheckEfuseMode(
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
 	INT32 Ret = 0;
-	UINT32 Value;
+	UINT32 Value = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 
@@ -1084,7 +1084,7 @@ static INT32 HQA_GetFreeEfuseBlock(
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
 	INT32 Ret = 0;
-	UINT32 Value;
+	UINT32 Value = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 	eFuseGetFreeBlockCount(pAd, &Value);
@@ -1367,7 +1367,7 @@ static INT32 HQA_SetDPD(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
-	INT32 Value = 0, WFSel;
+	INT32 Value = 0, WFSel = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
