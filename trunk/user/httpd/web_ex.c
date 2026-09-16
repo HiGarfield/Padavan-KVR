@@ -2039,6 +2039,7 @@ applydb_cgi(webs_t wp, char *urlPrefix, char *webDir, int arg,
 	char notify_cmd[128];
 	char db_cmd[128];
 	int i, j;
+	size_t key_len;
 	char *result = NULL;
 	char *temp = NULL;
 	char *name = websGetVar(wp, "p","");
@@ -2053,11 +2054,13 @@ applydb_cgi(webs_t wp, char *urlPrefix, char *webDir, int arg,
 	char usedlink[] = "dlink";
 	char useddlink[] = "ddlink";
 	
-	dbclient client;
-	dbclient_start(&client);
 	if (strlen(name) <= 0) {
 		printf("No \"name\"!\n");
+		return 0;
 	}
+
+	dbclient client;
+	dbclient_start(&client);
 	if ( !strcmp("", post_db_buf)){
 		//get
 		sprintf(post_db_buf, "%s", post_buf_backup+1);
@@ -2066,11 +2069,12 @@ applydb_cgi(webs_t wp, char *urlPrefix, char *webDir, int arg,
 		strcpy(post_json_buf, post_db_buf);
 		result = strtok( post_json_buf, "&" );
 		i =0;
-	while( result != NULL )
+	while( result != NULL && i < (int)(sizeof(dbjson)/sizeof(dbjson[0])) )
 	{
 		if (result!=NULL)
 		{
-		strcpy(dbjson[i], result);
+		strncpy(dbjson[i], result, sizeof(dbjson[i])-1);
+		dbjson[i][sizeof(dbjson[i])-1] = '\0';
 		i++;
 			result = strtok( NULL, "&" );
 		}
@@ -2081,8 +2085,14 @@ applydb_cgi(webs_t wp, char *urlPrefix, char *webDir, int arg,
 				memset(dbvar,'\0',sizeof(dbvar));
 				memset(dbval,'\0',sizeof(dbval));
 				temp=strstr(dbjson[j], "=");
-				strcpy(dbval, temp+1);
-				strncpy(dbvar, dbjson[j], strlen(dbjson[j])-strlen(temp));
+				if (!temp)
+					continue;
+				strncpy(dbval, temp+1, sizeof(dbval)-1);
+				key_len = (size_t)(temp - dbjson[j]);
+				if (key_len > sizeof(dbvar)-1)
+					key_len = sizeof(dbvar)-1;
+				memcpy(dbvar, dbjson[j], key_len);
+				dbvar[key_len] = '\0';
 			//logmessage("HTTPD", "name: %s post: %s", dbvar, userm);
 			if(strcmp(dbval,userm) == 0)
 				doSystem("dbus remove %s", dbvar);
@@ -2106,11 +2116,12 @@ applydb_cgi(webs_t wp, char *urlPrefix, char *webDir, int arg,
 	strcpy(post_json_buf, post_db_buf);
 	result = strtok( post_json_buf, "&" );
 	i =0;
-	while( result != NULL )
+	while( result != NULL && i < (int)(sizeof(dbjson)/sizeof(dbjson[0])) )
 	{
 		if (result!=NULL)
 		{
-		strcpy(dbjson[i], result);
+		strncpy(dbjson[i], result, sizeof(dbjson[i])-1);
+		dbjson[i][sizeof(dbjson[i])-1] = '\0';
 		i++;
 			result = strtok( NULL, "&" );
 		}
@@ -2121,8 +2132,14 @@ applydb_cgi(webs_t wp, char *urlPrefix, char *webDir, int arg,
 				memset(dbvar,'\0',sizeof(dbvar));
 				memset(dbval,'\0',sizeof(dbval));
 				temp=strstr(dbjson[j], "=");
-				strcpy(dbval, temp+1);
-				strncpy(dbvar, dbjson[j], strlen(dbjson[j])-strlen(temp));
+				if (!temp)
+					continue;
+				strncpy(dbval, temp+1, sizeof(dbval)-1);
+				key_len = (size_t)(temp - dbjson[j]);
+				if (key_len > sizeof(dbvar)-1)
+					key_len = sizeof(dbvar)-1;
+				memcpy(dbvar, dbjson[j], key_len);
+				dbvar[key_len] = '\0';
 			//logmessage("HTTPD", "name: %s post: %s", dbvar, dbval);
 			if(strcmp(dbval,userm) == 0)
 				doSystem("dbus remove %s", dbvar);
