@@ -4828,7 +4828,7 @@ static INT32 HQA_StaRecCmmUpdate(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ
 	NdisMoveMemory((PUCHAR)&tmp, (PUCHAR)&HqaCmdFrame->Data, len);
 	rec = PKTLA_TRAN_TO_HOST((len - MAC_ADDR_LEN) / 4, &tmp);
 
-	if (rec->wlan_idx > ATE_BFMU_NUM) {
+	if ((rec->wlan_idx > ATE_BFMU_NUM) || (rec->wlan_idx < 1)) {
 		Ret = NDIS_STATUS_INVALID_DATA;
 		goto err0;
 	}
