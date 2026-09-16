@@ -230,6 +230,8 @@ static INT32 HQA_OpenAdapter(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -252,6 +254,8 @@ static INT32 HQA_CloseAdapter(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -274,6 +278,8 @@ static INT32 HQA_StartTx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 TxCount;
 	UINT16 TxLength;
@@ -307,6 +313,8 @@ static INT32 HQA_StartTxExt(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -319,6 +327,8 @@ static INT32 HQA_StartTxContiTx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -332,6 +342,8 @@ static INT32 HQA_StartTxCarrier(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -345,6 +357,8 @@ static INT32 HQA_StartRx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -367,6 +381,8 @@ static INT32 HQA_StopTx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -395,6 +411,8 @@ static INT32 HQA_StopContiTx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	INT32 Ret = 0;
@@ -419,6 +437,8 @@ static INT32 HQA_StopTxCarrier(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -432,6 +452,8 @@ static INT32 HQA_StopRx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -458,6 +480,8 @@ static INT32 HQA_SetTxPath(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT16 Value = 0;
 	INT32 ant_sel = 0;
@@ -465,6 +489,7 @@ static INT32 HQA_SetTxPath(
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 2);
 	ant_sel = PKTS_TRAN_TO_HOST(Value);
 
@@ -488,12 +513,15 @@ static INT32 HQA_SetRxPath(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT16 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 2);
 	Value = PKTS_TRAN_TO_HOST(Value);
 
@@ -512,11 +540,14 @@ static INT32 HQA_SetTxIPG(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
@@ -537,6 +568,8 @@ static INT32 HQA_SetTxPower0(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT16 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -545,6 +578,7 @@ static INT32 HQA_SetTxPower0(
 	UINT8 band_idx = TESTMODE_BAND0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 2);
 	Value = PKTS_TRAN_TO_HOST(Value);
 	os_zero_mem(&TxPower, sizeof(TxPower));
@@ -566,6 +600,8 @@ static INT32 HAQ_SetTxPower1(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT16 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -574,6 +610,7 @@ static INT32 HAQ_SetTxPower1(
 	UINT8 band_idx = TESTMODE_BAND0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 2);
 	Value = PKTS_TRAN_TO_HOST(Value);
 	os_zero_mem(&TxPower, sizeof(TxPower));
@@ -595,6 +632,8 @@ static INT32 HQA_SetTxPowerExt(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -637,6 +676,8 @@ static INT32 HQA_SetTxPwrManual(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 
 	INT16 Ret = 0;
 	struct _HQA_PWR_MANUAL manual_pwr;
@@ -685,6 +726,8 @@ static INT32 HQA_AntennaSel(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	/* todo wait FW confirm */
@@ -698,6 +741,8 @@ static INT32 HQA_SetOnOFF(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	/* MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __FUNCTION__)); */
@@ -710,6 +755,8 @@ static INT32 HQA_FWPacketCMD_ClockSwitchDisable(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 isDisable = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -729,6 +776,8 @@ static INT32 HQA_SetTxPowerEval(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	/* MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __FUNCTION__)); */
@@ -738,6 +787,8 @@ static INT32 HQA_SetTxPowerEval(
 
 static INT32 HQA_AntennaSelExt(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 RfModeMask = 0;
 	UINT32 RfPortMask = 0;
@@ -810,6 +861,8 @@ static INT32 HQA_SetChannel(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Ret = 0;
 	UINT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -837,11 +890,14 @@ static INT32 HQA_SetPreamble(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 	/* 000: Legacy CCK
@@ -861,11 +917,14 @@ static INT32 HQA_SetRate(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 	ATECtrl->Mcs = (UCHAR)Value;
@@ -879,6 +938,8 @@ static INT32 HQA_SetNss(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -892,10 +953,13 @@ static INT32 HQA_SetSystemBW(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 	/* 0: BW_20, 1:BW_40, 2:BW_80, 3:BW_160*/
@@ -913,10 +977,13 @@ static INT32 HQA_SetPerPktBW(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
@@ -936,6 +1003,8 @@ static INT32 HQA_SetPrimaryBW(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -949,12 +1018,15 @@ static INT32 HQA_SetFreqOffset(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 
@@ -973,6 +1045,8 @@ static INT32 HQA_SetAutoResponder(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -986,6 +1060,8 @@ static INT32 HQA_SetTssiOnOff(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0, WFSel = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -993,8 +1069,10 @@ static INT32 HQA_SetTssiOnOff(
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 	/* ON/OFF:4 WF Sel:4 */
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&WFSel, HqaCmdFrame->Data + 4, 4);
 	WFSel = PKTL_TRAN_TO_HOST(WFSel);
 
@@ -1013,6 +1091,8 @@ static INT32 HQA_SetRxHighLowTemperatureCompensation(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1026,6 +1106,8 @@ static INT32 HQA_LowPower(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Control = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -1067,6 +1149,8 @@ static INT32 HQA_ResetTxRxCounter(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
@@ -1099,6 +1183,8 @@ static INT32 HQA_GetChipID(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 ChipId;
 
@@ -1115,6 +1201,8 @@ static INT32 HQA_GetFWVersion(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct fw_info *fw_info = NULL;
 	UINT i = 0;
@@ -1140,6 +1228,8 @@ static INT32 HQA_GetStatistics(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1152,6 +1242,8 @@ static INT32 HQA_GetRxOKData(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1165,6 +1257,8 @@ static INT32 HQA_GetRxOKOther(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1178,6 +1272,8 @@ static INT32 HQA_GetRxAllPktCount(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1191,6 +1287,8 @@ static INT32 HQA_GetTxTransmitted(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -1210,6 +1308,8 @@ static INT32 HQA_GetHwCounter(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1223,6 +1323,8 @@ static INT32 HQA_CalibrationOperation(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1236,6 +1338,8 @@ static INT32 HQA_CalibrationBypassExt(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 Ret = 0;
 	UINT32 item = 0;
@@ -1265,6 +1369,8 @@ static INT32 HQA_SetRXVectorIdx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 Ret = 0;
 	UINT32 band_idx = 0;
@@ -1299,6 +1405,8 @@ static INT32 HQA_SetFAGCRssiPath(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	struct _ATE_CTRL *ate_ctrl = &pAd->ATECtrl;
 	INT32 Ret = 0;
 	UINT32 band_idx = 0;
@@ -1370,6 +1478,8 @@ static INT32 HQA_MacBbpRegRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Offset, Value;
 	BOOLEAN IsFound;
@@ -1409,6 +1519,8 @@ static INT32 HQA_MacBbpRegWrite(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Offset, Value;
 	BOOLEAN IsFound;
@@ -1541,6 +1653,8 @@ static INT32 HQA_MACBbpRegBulkRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Offset;
 	UINT16 Len, Tmp;
@@ -1576,6 +1690,8 @@ static INT32 HQA_RfRegBulkRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Index, WfSel, Offset, Length, Value;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -1618,6 +1734,8 @@ static INT32 HQA_RfRegBulkWrite(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Index, WfSel, Offset, Length, Value;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -1660,6 +1778,8 @@ static INT32 HQA_ReadEEPROM(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 #if !defined(COMPOS_TESTMODE_WIN)/* 1Todo	 RT28xx_EEPROM_READ16 */
 	UINT16 Offset = 0, Value = 0;
@@ -1685,6 +1805,8 @@ static INT32 HQA_WriteEEPROM(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 Offset = 0, Value = 0;
 
@@ -1714,6 +1836,8 @@ static INT32 HQA_ReadBulkEEPROM(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 Offset;
 	UINT16 Len;
@@ -1796,6 +1920,8 @@ static INT32 HQA_WriteBulkEEPROM(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 #if !defined(COMPOS_TESTMODE_WIN) /* 1Todo	 RT28xx_EEPROM_WRITE16 */
 	USHORT Offset;
@@ -1856,6 +1982,8 @@ static INT32 HQA_CheckEfuseMode(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 #if !defined(COMPOS_TESTMODE_WIN) /* 1Todo	eFuseGetFreeBlockCount */
 	UINT32 Value = 0;
@@ -1880,6 +2008,8 @@ static INT32 HQA_GetFreeEfuseBlock(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 #if !defined(COMPOS_TESTMODE_WIN) /* 1Todo	eFuseGetFreeBlockCount */
 	/* remove this block when command RSP function ready */
@@ -1920,6 +2050,8 @@ static INT32 HQA_GetEfuseBlockNr(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1933,6 +2065,8 @@ static INT32 HQA_WriteEFuseFromBuffer(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1947,6 +2081,8 @@ static INT32 HQA_GetTxPower(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Channel = 0, Band = 0, Ch_Band = 0, EfuseAddr = 0, Power = 0;
 	INT32 offset = 0;
@@ -1954,12 +2090,15 @@ static INT32 HQA_GetTxPower(
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Channel, (PUCHAR)&HqaCmdFrame->Data, sizeof(Channel));
 	Channel = PKTL_TRAN_TO_HOST(Channel);
 	offset += sizeof(Channel);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Band, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Band));
 	Band = PKTL_TRAN_TO_HOST(Band);
 	offset += sizeof(Band);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Ch_Band, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Ch_Band));
 	Ch_Band = PKTL_TRAN_TO_HOST(Ch_Band);
 	offset += sizeof(Ch_Band);
@@ -1989,16 +2128,21 @@ static INT32 HQA_SetCfgOnOff(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Type = 0, Enable = 0, Band = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Type, HqaCmdFrame->Data, 4);
 	Type = PKTL_TRAN_TO_HOST(Type);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Enable, HqaCmdFrame->Data + 4, 4);
 	Enable = PKTL_TRAN_TO_HOST(Enable);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Band, HqaCmdFrame->Data + 8, 4);
 	Band = PKTL_TRAN_TO_HOST(Band);
 
@@ -2019,6 +2163,8 @@ static INT32 HQA_GetFreqOffset(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 FreqOffset = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -2044,6 +2190,8 @@ static INT32 HQA_DBDCTXTone(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 BandIdx = 0, Control = 0, AntIndex = 0, ToneType = 0, ToneFreq = 0, DcOffset_I = 0, DcOffset_Q = 0, Band = 0;
 	INT32 RF_Power = 0, Digital_Power = 0;
@@ -2053,33 +2201,43 @@ static INT32 HQA_DBDCTXTone(
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 	/* BandIdx:4 Control:4 AntIndex:4 ToneType:4 ToneFreq:4 DcOffset_I:4 DcOffset_Q:4 Band:4 */
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&BandIdx, (PUCHAR)&HqaCmdFrame->Data, sizeof(BandIdx));
 	BandIdx = PKTL_TRAN_TO_HOST(BandIdx);
 	offset += sizeof(BandIdx);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Control, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Control));
 	Control = PKTL_TRAN_TO_HOST(Control);
 	offset += sizeof(Control);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&AntIndex, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(AntIndex));
 	AntIndex = PKTL_TRAN_TO_HOST(AntIndex);
 	offset += sizeof(AntIndex);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&ToneType, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(ToneType));
 	ToneType = PKTL_TRAN_TO_HOST(ToneType);
 	offset += sizeof(ToneType);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&ToneFreq, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(ToneFreq));
 	ToneFreq = PKTL_TRAN_TO_HOST(ToneFreq);
 	offset += sizeof(ToneFreq);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&DcOffset_I, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(DcOffset_I));
 	DcOffset_I = PKTL_TRAN_TO_HOST(DcOffset_I);
 	offset += sizeof(DcOffset_I);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&DcOffset_Q, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(DcOffset_Q));
 	DcOffset_Q = PKTL_TRAN_TO_HOST(DcOffset_Q);
 	offset += sizeof(DcOffset_Q);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Band, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Band));
 	Band = PKTL_TRAN_TO_HOST(Band);
 	offset += sizeof(Band);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&RF_Power, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(RF_Power));
 	RF_Power = PKTL_TRAN_TO_HOST(RF_Power);
 	offset += sizeof(RF_Power);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Digital_Power, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Digital_Power));
 	Digital_Power = PKTL_TRAN_TO_HOST(Digital_Power);
 	offset += sizeof(Digital_Power);
@@ -2106,6 +2264,8 @@ static INT32 HQA_DBDCContinuousTX(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Band = 0, Control = 0, AntMask = 0, Phymode = 0, BW = 0;
 	INT32 Pri_Ch = 0, Rate = 0, Central_Ch = 0, TxfdMode = 0;
@@ -2115,30 +2275,39 @@ static INT32 HQA_DBDCContinuousTX(
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 	/* Band:4 Control:4 AntIndex:4 Modulation:4 BW:4 Pri_Ch:4 Rate:4 */
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Band, (PUCHAR)&HqaCmdFrame->Data, sizeof(Band));
 	Band = PKTL_TRAN_TO_HOST(Band);
 	offset += sizeof(Band);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Control, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Control));
 	Control = PKTL_TRAN_TO_HOST(Control);
 	offset += sizeof(Control);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&AntMask, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(AntMask));
 	AntMask = PKTL_TRAN_TO_HOST(AntMask);
 	offset += sizeof(AntMask);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Phymode, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Phymode));
 	Phymode = PKTL_TRAN_TO_HOST(Phymode);
 	offset += sizeof(Phymode);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&BW, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(BW));
 	BW = PKTL_TRAN_TO_HOST(BW);
 	offset += sizeof(BW);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Pri_Ch, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Pri_Ch));
 	Pri_Ch = PKTL_TRAN_TO_HOST(Pri_Ch);
 	offset += sizeof(Pri_Ch);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Rate, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Rate));
 	Rate = PKTL_TRAN_TO_HOST(Rate);
 	offset += sizeof(Rate);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Central_Ch, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Central_Ch));
 	Central_Ch = PKTL_TRAN_TO_HOST(Central_Ch);
 	offset += sizeof(Central_Ch);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&TxfdMode, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(TxfdMode));
 	TxfdMode = PKTL_TRAN_TO_HOST(TxfdMode);
 	offset += sizeof(TxfdMode);
@@ -2176,6 +2345,8 @@ static INT32 HQA_SetRXFilterPktLen(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Band = 0, Control = 0, RxPktlen = 0;
 	INT32 offset = 0;
@@ -2183,12 +2354,15 @@ static INT32 HQA_SetRXFilterPktLen(
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Band, (PUCHAR)&HqaCmdFrame->Data, sizeof(Band));
 	Band = PKTL_TRAN_TO_HOST(Band);
 	offset += sizeof(Band);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Control, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Control));
 	Control = PKTL_TRAN_TO_HOST(Control);
 	offset += sizeof(Control);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&RxPktlen, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(RxPktlen));
 	RxPktlen = PKTL_TRAN_TO_HOST(RxPktlen);
 	offset += sizeof(RxPktlen);
@@ -2210,6 +2384,8 @@ static INT32 HQA_GetTXInfo(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ate_ctrl = &(pAd->ATECtrl);
 	UINT32 txed_band0 = 0;
@@ -2234,6 +2410,8 @@ static INT32 HQA_GetCfgOnOff(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Type = 0, Band = 0;
 	UINT32 Result = 0;
@@ -2241,9 +2419,11 @@ static INT32 HQA_GetCfgOnOff(
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Type, (PUCHAR)&HqaCmdFrame->Data, sizeof(Type));
 	Type = PKTL_TRAN_TO_HOST(Type);
 	offset += sizeof(Type);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Band, (PUCHAR)&HqaCmdFrame->Data + offset, sizeof(Band));
 	Band = PKTL_TRAN_TO_HOST(Band);
 	offset += sizeof(Band);
@@ -2280,6 +2460,8 @@ static INT32 HQA_SetBufferBin(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 #if defined(COMPOS_TESTMODE_WIN)
 	UINT32 buffer_mode_merge = 0;
@@ -2307,6 +2489,8 @@ static INT32 HQA_CA53RegRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 ret = 0;
 	unsigned long offset = 0;
 	UINT32 value = 0;
@@ -2334,6 +2518,8 @@ static INT32 HQA_CA53RegWrite(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 ret = 0;
 	unsigned long offset = 0;
 	UINT32 value = 0;
@@ -2396,6 +2582,8 @@ static INT32 HQA_ReadTempReferenceValue(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -2423,6 +2611,8 @@ static INT32 HQA_GetThermalValue(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -2442,6 +2632,8 @@ static INT32 HQA_SetSideBandOption(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -2463,6 +2655,8 @@ static INT32 hqa_get_fw_info(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -2484,6 +2678,8 @@ static INT32 HQA_StartContinousTx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0, WFSel = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -2493,6 +2689,7 @@ static INT32 HQA_StartContinousTx(
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 	/* Modulation:4 BW:4 PRI_CH:4 RATE:4 WFSel:4 */
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 	ATECtrl->PhyMode = (UCHAR)Value;
@@ -2505,6 +2702,7 @@ static INT32 HQA_StartContinousTx(
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data + 12, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 	ATECtrl->Mcs = (UCHAR)Value;
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&WFSel, (PUCHAR)&HqaCmdFrame->Data + 16, 4);
 	WFSel = PKTL_TRAN_TO_HOST(WFSel);
 
@@ -2523,6 +2721,8 @@ static INT32 HQA_SetSTBC(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -2541,11 +2741,14 @@ static INT32 HQA_SetShortGI(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 	ATECtrl->Sgi = (UCHAR)Value;
@@ -2559,6 +2762,8 @@ static INT32 HQA_SetDPD(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0, WFSel = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -2566,8 +2771,10 @@ static INT32 HQA_SetDPD(
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 	/* ON/OFF:4 WF Sel:4 */
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&WFSel, (PUCHAR)&HqaCmdFrame->Data + 4, 4);
 	WFSel = PKTL_TRAN_TO_HOST(WFSel);
 
@@ -2680,6 +2887,8 @@ static INT32 HQA_GetRxStatisticsAll(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -2857,12 +3066,15 @@ static INT32 HQA_StartContiTxTone(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 
@@ -2881,6 +3093,8 @@ static INT32 HQA_StopContiTxTone(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -2903,6 +3117,8 @@ static INT32 HQA_CalibrationTestMode(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 Value = 0;
 	INT32 Ret = 0;
@@ -2952,6 +3168,8 @@ static INT32 HQA_DoCalibrationTestItem(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	struct _ATE_CTRL *ATECtrl = &pAd->ATECtrl;
 	INT32 Ret = 0;
 	UINT32 item = 0;
@@ -2995,6 +3213,8 @@ static INT32 HQA_eFusePhysicalWrite(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -3009,6 +3229,8 @@ static INT32 HQA_eFusePhysicalRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -3023,6 +3245,8 @@ static INT32 HQA_eFuseLogicalRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -3037,6 +3261,8 @@ static INT32 HQA_eFuseLogicalWrite(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -3051,6 +3277,8 @@ static INT32 HQA_TMRSetting(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 #if !defined(COMPOS_TESTMODE_WIN)
 	UCHAR *data = HqaCmdFrame->Data;
@@ -3091,6 +3319,8 @@ static INT32 HQA_GetRxSNR(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -3110,10 +3340,13 @@ static INT32 HQA_WriteBufferDone(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = PKTL_TRAN_TO_HOST(Value);
 #if !defined(COMPOS_TESTMODE_WIN) /* 1Todo	Set_EepromBufferWriteBack_Proc */
@@ -3159,6 +3392,8 @@ static INT32 HQA_FFT(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	UINT32 Value = 0;
@@ -3173,6 +3408,8 @@ static INT32 HQA_FFT(
 
 static INT32 HQA_SetTxTonePower(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Value = 0;
 	INT32 pwr1 = 0;
@@ -3180,6 +3417,7 @@ static INT32 HQA_SetTxTonePower(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	pwr1 = PKTL_TRAN_TO_HOST(Value);
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data + 4, 4);
@@ -3199,6 +3437,8 @@ static INT32 HQA_SetTxTonePower(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ,
 
 static INT32 HQA_SetAIFS(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Value = 0;
 	UINT32 SlotTime = 0;
@@ -3206,6 +3446,7 @@ static INT32 HQA_SetAIFS(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	SlotTime = PKTL_TRAN_TO_HOST(Value);
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data + 4, 4);
@@ -3225,6 +3466,8 @@ static INT32 HQA_SetAIFS(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct
 
 static INT32 HQA_MPSSetSeqData(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	UINT32 len = 0;
 	INT32 Ret = 0;
@@ -3274,6 +3517,8 @@ MPS_SEQ_DATA_RET:
 
 static INT32 HQA_MPSSetPayloadLength(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	UINT32 len = 0;
 	INT32 Ret = 0;
@@ -3323,6 +3568,8 @@ MPS_PKT_LEN_RET:
 
 static INT32 HQA_MPSSetPacketCount(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	UINT32 len = 0;
 	INT32 Ret = 0;
@@ -3371,6 +3618,8 @@ MPS_PKT_CNT_RET:
 
 static INT32 HQA_MPSSetPowerGain(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	UINT32 len = 0;
 	INT32 Ret = 0;
@@ -3420,6 +3669,8 @@ MPS_SET_PWR_RET:
 
 static INT32 HQA_MPSStart(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	INT32 Ret = 0;
@@ -3441,6 +3692,8 @@ static INT32 HQA_MPSStart(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struc
 
 static INT32 HQA_MPSStop(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -3462,6 +3715,8 @@ static INT32 HQA_MPSStop(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct
 
 static INT32 HQA_MPSSetNss(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	UINT32 len = 0;
 	INT32 Ret = 0;
@@ -3511,6 +3766,8 @@ out:
 
 static INT32 HQA_MPSSetPerpacketBW(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	UINT32 len = 0;
 	INT32 Ret = 0;
@@ -3594,6 +3851,8 @@ out:
 
 static INT32 HQA_CheckEfuseModeType(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 val = 0;
 	INT32 Ret = 0;
 
@@ -3610,6 +3869,8 @@ static INT32 HQA_CheckEfuseModeType(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *
 
 static INT32 HQA_CheckEfuseNativeModeType(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 val = 0;
 	INT32 Ret = 0;
 
@@ -3626,6 +3887,8 @@ static INT32 HQA_CheckEfuseNativeModeType(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_ST
 
 static INT32 HQA_SetBandMode(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UCHAR *data = HqaCmdFrame->Data;
 	UINT32 band_mode = 0;
@@ -3660,6 +3923,8 @@ static INT32 HQA_SetBandMode(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, st
 
 static INT32 HQA_GetBandMode(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 band_mode = 0;
 	UCHAR *data = HqaCmdFrame->Data;
@@ -3698,6 +3963,8 @@ static INT32 HQA_GetBandMode(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, st
 
 static INT32 HQA_RDDStartExt(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 rdd_num = 0;
 	UINT32 rdd_in_sel = 0;
 	INT32 Ret = 0;
@@ -3720,6 +3987,8 @@ static INT32 HQA_RDDStartExt(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, st
 
 static INT32 HQA_RDDStopExt(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 rdd_num = 0;
 	UINT32 rdd_in_sel = 0;
 	INT32 Ret = 0;
@@ -3742,6 +4011,8 @@ static INT32 HQA_RDDStopExt(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, str
 
 static INT32 HQA_BssInfoUpdate(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 OwnMacIdx = 0, BssIdx = 0;
 	UCHAR Bssid[MAC_ADDR_LEN];
 	INT32 Ret = 0;
@@ -3763,6 +4034,8 @@ static INT32 HQA_BssInfoUpdate(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, 
 
 static INT32 HQA_DevInfoUpdate(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Band = 0, OwnMacIdx = 0;
 	UCHAR Bssid[MAC_ADDR_LEN];
 	INT32 Ret = 0;
@@ -3785,6 +4058,8 @@ static INT32 HQA_DevInfoUpdate(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, 
 
 static INT32 HQA_LogOnOff(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 band_idx = 0;
 	UINT32 log_type = 0;
@@ -3820,6 +4095,8 @@ static INT32 HQA_LogOnOff(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struc
 
 static INT32 HQA_SetPowerToBufferBin(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 Ret = 0;
 	UINT32 band_idx = 0;
@@ -3862,6 +4139,8 @@ static INT32 HQA_SetPowerToBufferBin(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT 
 
 static INT32 HQA_SetFrequencyOffsetToBufferBin(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF,
@@ -3873,6 +4152,8 @@ static INT32 HQA_SetFrequencyOffsetToBufferBin(PRTMP_ADAPTER pAd, RTMP_IOCTL_INP
 
 static INT32 HQA_HIFTestSetStartLoopback(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 len = 0;
 	struct _ATE_CTRL *ate_ctrl = &(pAd->ATECtrl);
@@ -3911,6 +4192,8 @@ static INT32 HQA_HIFTestSetStartLoopback(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STR
 
 static INT32 HQA_HIFTestSetStopLoopback(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF,
@@ -3927,6 +4210,8 @@ static INT32 HQA_HIFTestSetStopLoopback(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRU
 
 static INT32 HQA_HIFTestGetStatus(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _LOOPBACK_RESULT tmp, *resp;
 
@@ -3942,6 +4227,8 @@ static INT32 HQA_HIFTestGetStatus(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WR
 
 static INT32 HQA_HIFTestSetTxData(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 len = 0;
 	UINT32 tx_len = 0;
@@ -3974,6 +4261,8 @@ static INT32 HQA_HIFTestSetTxData(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WR
 
 static INT32 HQA_HIFTestSetRxData(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	UINT32 rx_len = 0;
@@ -4006,6 +4295,8 @@ static INT32 HQA_HIFTestSetRxData(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WR
 
 static INT32 HQA_HIFTestGetTxRxData(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UCHAR *out = HqaCmdFrame->Data + 2;
 	/* TODO:: Need check ated allocate size */
@@ -4035,6 +4326,8 @@ static INT32 HQA_HIFTestGetTxRxData(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *
 
 static INT32 HQA_UDMAAction(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 val = 0;
 	INT32 Ret = 0;
 
@@ -4047,6 +4340,8 @@ static INT32 HQA_UDMAAction(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, str
 
 static INT32 HQA_WIFIPowerOff(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 val = 0;
 	INT32 Ret = 0;
 
@@ -4059,6 +4354,8 @@ static INT32 HQA_WIFIPowerOff(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, s
 
 static INT32 ToDoFunction(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	ResponseToQA(HqaCmdFrame, WRQ, 2, Ret);
@@ -4199,6 +4496,8 @@ VOID HQA_BF_INFO_CB(RTMP_ADAPTER *pAd, unsigned char *data, UINT32 len)
 
 static INT32 HQA_TxBfProfileTagInValid(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 invalid = 0;
 	RTMP_STRING *cmd;
@@ -4228,6 +4527,8 @@ BF_PROFILE_TAG_INVALID_FAIL:
 
 static INT32 HQA_TxBfProfileTagPfmuIdx(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 pfmuidx = 0;
 	RTMP_STRING *cmd;
@@ -4257,6 +4558,8 @@ BF_PROFILE_TAG_PFMU_FAIL:
 
 static INT32 HQA_TxBfProfileTagBfType(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 bftype = 0;
 	RTMP_STRING *cmd;
@@ -4286,6 +4589,8 @@ BF_PROFILE_TAG_BFTYPE_FAIL:
 
 static INT32 HQA_TxBfProfileTagBw(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 tag_bw = 0;
 	RTMP_STRING *cmd;
@@ -4315,6 +4620,8 @@ BF_PROFILE_TAG_BW_FAIL:
 
 static INT32 HQA_TxBfProfileTagSuMu(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 su_mu = 0;
 	RTMP_STRING *cmd;
@@ -4344,6 +4651,8 @@ BF_PROFILE_TAG_SUMU_FAIL:
 
 static INT32 HQA_TxBfProfileTagMemAlloc(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	struct _HQA_BF_TAG_ALLOC tmp, *layout = NULL;
@@ -4395,6 +4704,8 @@ HQA_TAG_MEMALLOC_FAIL:
 
 static INT32 HQA_TxBfProfileTagMatrix(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	struct _HQA_BF_TAG_MATRIX tmp, *matrix = NULL;
@@ -4435,6 +4746,8 @@ HQA_TAG_MATRIX_FAIL:
 
 static INT32 HQA_TxBfProfileTagSnr(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	struct _HQA_BF_TAG_SNR tmp, *snr = NULL;
@@ -4475,6 +4788,8 @@ HQA_TAG_SNR_FAIL:
 
 static INT32 HQA_TxBfProfileTagSmtAnt(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 smt_ant = 0;
 	RTMP_STRING *cmd;
@@ -4511,6 +4826,8 @@ HQA_TAG_SMTANT_FAIL:
 
 static INT32 HQA_TxBfProfileTagSeIdx(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 se_idx = 0;
 	RTMP_STRING *cmd;
@@ -4540,6 +4857,8 @@ HQA_TAG_SEIDX_FAIL:
 
 static INT32 HQA_TxBfProfileTagRmsdThrd(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 rmsd_thrd = 0;
 	RTMP_STRING *cmd;
@@ -4569,6 +4888,8 @@ HQA_TAG_RMSDTHRD_FAIL:
 
 static INT32 HQA_TxBfProfileTagMcsThrd(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	struct _HQA_BF_TAG_MCS_THRD tmp, *mcs_thrd = NULL;
@@ -4609,6 +4930,8 @@ HQA_TAG_MCSTHRD_FAIL:
 
 static INT32 HQA_TxBfProfileTagTimeOut(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 bf_tout = 0;
 	RTMP_STRING *cmd;
@@ -4638,6 +4961,8 @@ HQA_TAG_TOUT_FAIL:
 
 static INT32 HQA_TxBfProfileTagDesiredBw(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 desire_bw = 0;
 	RTMP_STRING *cmd;
@@ -4667,6 +4992,8 @@ HQA_TAG_DBW_FAIL:
 
 static INT32 HQA_TxBfProfileTagDesiredNc(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 desire_nc = 0;
 	RTMP_STRING *cmd;
@@ -4696,6 +5023,8 @@ HQA_TAG_DNC_FAIL:
 
 static INT32 HQA_TxBfProfileTagDesiredNr(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 desire_nr = 0;
 	RTMP_STRING *cmd;
@@ -4724,6 +5053,8 @@ HQA_TAG_DNR_FAIL:
 
 static INT32 HQA_TxBfProfileTagWrite(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 idx = 0;	/* WLAN_IDX */
 	RTMP_STRING *cmd;
@@ -4753,6 +5084,8 @@ HQA_TAG_WRITE_FAIL:
 
 static INT32 HQA_TxBfProfileTagRead(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 idx = 0, isBFer = 0;
 	struct _ATE_CTRL *ate_ctrl = &(pAd->ATECtrl);
@@ -4804,6 +5137,8 @@ HQA_TAG_READ_FAIL:
 
 static INT32 HQA_StaRecCmmUpdate(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	struct _HQA_BF_STA_CMM_REC tmp, *rec = NULL;
@@ -4838,6 +5173,7 @@ static INT32 HQA_StaRecCmmUpdate(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ
 	pfmu_info->bss_idx = rec->bss_idx;
 	NdisMoveMemory(pfmu_info->addr, rec->mac, MAC_ADDR_LEN);
 	memset(cmd, 0x00, HQA_BF_STR_SIZE);
+	/* cppcheck-suppress wrongPrintfScanfArgNum */
 	sprintf(cmd, "%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x", rec->wlan_idx, rec->bss_idx, rec->aid, PRINT_MAC(rec->mac));
 #if defined(MT7615) || defined(MT7622)
 	Set_StaRecCmmUpdate(pAd, cmd);
@@ -4859,6 +5195,8 @@ err0:
 
 static INT32 HQA_StaRecBfUpdate(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	struct _HQA_BF_STA_REC tmp, *rec = NULL;
@@ -4918,6 +5256,8 @@ HQA_STAREC_BF_UPDATE_FAIL:
 
 static INT32 HQA_BFProfileDataRead(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 idx = 0, fgBFer = 0, subcarrIdx = 0, subcarr_start = 0, subcarr_end = 0;
 	UINT32 offset = 0;
@@ -4988,6 +5328,8 @@ BF_PROFILE_DATA_READ_FAIL:
 
 static INT32 HQA_BFProfileDataWrite(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	INT debug_lvl = DebugLevel;
@@ -5043,6 +5385,8 @@ BF_PROFILE_DATA_WRITE_FAIL:
 
 static INT32 HQA_BFQdRead(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ate_ctrl = &(pAd->ATECtrl);
 	UCHAR *out = NULL;
@@ -5089,6 +5433,8 @@ HQA_BF_QD_READ_FAIL:
 
 static INT32 HQA_BFSounding(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	struct _HQA_BF_SOUNDING tmp, *param;
@@ -5130,6 +5476,8 @@ HQA_BFSOUNDING_FAIL:
 
 static INT32 HQA_TXBFSoundingStop(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 #if defined(MT7615) || defined(MT7622)
@@ -5143,6 +5491,8 @@ static INT32 HQA_TXBFSoundingStop(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WR
 
 static INT32 HQA_TXBFProfileDataWriteAllExt(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 bw = 0;
 	UINT32 profile_idx = 0;
@@ -5176,6 +5526,8 @@ err0:
 #ifdef MT_MAC
 static INT32 HQA_TxBfTxApply(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 eBF_enable = 0;
 	UINT32 iBF_enable = 0;
@@ -5216,6 +5568,8 @@ err0:
 
 static INT32 HQA_ManualAssoc(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	P_MANUAL_CONN manual_cfg = &pAd->AteManualConnInfo;
 	struct _HQA_BF_MANUAL_CONN manual_conn;
@@ -5378,6 +5732,8 @@ static INT32 HQA_ManualAssoc(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, st
 #else
 static INT32 HQA_eBFEnable(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 enable = 0;
 	UINT32 band_idx = 0;
@@ -5400,6 +5756,8 @@ static INT32 HQA_eBFEnable(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, stru
 
 static INT32 HQA_iBFEnable(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 enable = 0;
 	UINT32 band_idx = 0;
@@ -5460,6 +5818,8 @@ static HQA_CMD_HANDLER HQA_TXBF_CMDS[] = {
 #ifdef CFG_SUPPORT_MU_MIMO
 static INT32 HQA_MUGetInitMCS(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 gid = 0;
 	MU_STRUCT_MU_GROUP_INIT_MCS init_mcs;
@@ -5484,6 +5844,8 @@ static INT32 HQA_MUGetInitMCS(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, s
 
 static INT32 HQA_MUCalInitMCS(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	/* INT32 gid = 0; */
 	MU_STRUCT_SET_CALC_INIT_MCS param;
@@ -5513,6 +5875,8 @@ static INT32 HQA_MUCalInitMCS(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, s
 
 static INT32 HQA_MUCalLQ(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Type = 0;
 	INT32 gid = 0;
@@ -5561,6 +5925,8 @@ static INT32 HQA_MUCalLQ(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct
 
 static INT32 HQA_MUGetLQ(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Type = 0;
 	UCHAR *data = HqaCmdFrame->Data;
@@ -5591,6 +5957,8 @@ static INT32 HQA_MUGetLQ(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct
 
 static INT32 HQA_MUSetSNROffset(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 offset = 0;
 
@@ -5606,6 +5974,8 @@ static INT32 HQA_MUSetSNROffset(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ,
 
 static INT32 HQA_MUSetZeroNss(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 zero_nss = 0;
 
@@ -5621,6 +5991,8 @@ static INT32 HQA_MUSetZeroNss(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, s
 
 static INT32 HQA_MUSetSpeedUpLQ(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 spdup_lq = 0;
 
@@ -5636,6 +6008,8 @@ static INT32 HQA_MUSetSpeedUpLQ(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ,
 
 static INT32 HQA_MUSetMUTable(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	UCHAR *tbl = NULL;
@@ -5667,6 +6041,8 @@ err0:
 
 static INT32 HQA_MUSetGroup(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	UINT32 val32;
@@ -5749,6 +6125,8 @@ static INT32 HQA_MUSetGroup(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, str
 
 static INT32 HQA_MUGetQD(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT debug_lvl = DebugLevel;
 	INT32 subcarrier_idx = 0;
@@ -5772,6 +6150,8 @@ static INT32 HQA_MUGetQD(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct
 
 static INT32 HQA_MUSetEnable(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 is_enable = 0;
 	/* struct _ATE_CTRL *ate_ctrl = &(pAd->ATECtrl); */
@@ -5786,6 +6166,8 @@ static INT32 HQA_MUSetEnable(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, st
 
 static INT32 HQA_MUSetGID_UP(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 len = 0;
 	UCHAR *data = HqaCmdFrame->Data;
@@ -5820,6 +6202,8 @@ static INT32 HQA_MUSetGID_UP(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, st
 
 static INT32  HQA_MUTriggerTx(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	struct _ATE_CTRL *ate_ctrl = &pAd->ATECtrl;
 	INT32 Ret = 0;
 	UINT16 len = 0;
@@ -5884,6 +6268,8 @@ static HQA_CMD_HANDLER HQA_TXMU_CMDS[] = {
 
 static INT32 HQA_CapWiFiSpectrum(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 #ifdef INTERNAL_CAPTURE_SUPPORT
 	/* Set Param*/
@@ -6924,6 +7310,8 @@ static INT32	HQA_MCU_RegRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -6935,6 +7323,8 @@ static INT32	HQA_MCU_RegWrite(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -6947,6 +7337,8 @@ static INT32	HQA_MCUTest(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT16	ntStatus = 0x00;
 	return ntStatus;
 }
@@ -7028,6 +7420,8 @@ UINT32 HQA_CMDHandler(
 	RTMP_IOCTL_INPUT_STRUCT *Wrq,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return NDIS_STATUS_FAILURE;
 	UINT32 Status = NDIS_STATUS_SUCCESS;
 	UINT16 CmdId;
 	UINT32 TableIndex = 0;
