@@ -403,7 +403,7 @@ static INT32 chip_show_pse_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 			 ("PSE Configuration Info:\n"));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("\tPacket Buffer Control(0x82068014): 0x%08x\n", pse_buf_ctrl));
-	pg_sz = (pse_buf_ctrl & (0x1 << 31)) >> 31;
+	pg_sz = (pse_buf_ctrl & (0x1U << 31)) >> 31;
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("\t\tPage Size=%d(%d bytes per page)\n", pg_sz, (pg_sz == 1 ? 256 : 128)));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
@@ -525,23 +525,23 @@ static INT32 chip_show_pse_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 			  ((pse_stat & 0x4) >> 2), ((pse_stat & 0x8) >> 3)));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("\t\tHIF Q0/1 empty=%d/%d\n",
-			  ((pse_stat & (0x1 << 16)) >> 16), ((pse_stat & (0x1 << 17)) >> 17)));
+			  ((pse_stat & (0x1U << 16)) >> 16), ((pse_stat & (0x1U << 17)) >> 17)));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("\t\tLMAC TX Q empty=%d\n",
-			  ((pse_stat & (0x1 << 24)) >> 24)));
+			  ((pse_stat & (0x1U << 24)) >> 24)));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("\t\tRLS_Q empty=%d\n",
-			  ((pse_stat & (0x1 << 31)) >> 31)));
+			  ((pse_stat & (0x1U << 31)) >> 31)));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("Nonempty Q info:\n"));
 
 	for (i = 0; i < 31; i++) {
-		if (((pse_stat & (0x1 << i)) >> i) == 0) {
+		if (((pse_stat & (0x1U << i)) >> i) == 0) {
 			UINT32 hfid, tfid, pktcnt, fl_que_ctrl[3] = {0};
 
 			if (i < 4) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 						 ("\tCPU Q%d: ", i));
-				fl_que_ctrl[0] |= (0x1 << 14);
+				fl_que_ctrl[0] |= (0x1U << 14);
 				fl_que_ctrl[0] |= (i << 8);
 			} else if (i == 16) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("\tHIF Q0: "));
@@ -550,7 +550,7 @@ static INT32 chip_show_pse_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 			} else if (i == 17) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("\tHIF  Q1: "));
 				fl_que_ctrl[0] |= (0x0 << 14);
-				fl_que_ctrl[0] |= (0x1 << 8);
+				fl_que_ctrl[0] |= (0x1U << 8);
 			} else if (i == 24) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("\tLMAC TX Q: "));
 				fl_que_ctrl[0] |= (0x2 << 14);
@@ -562,7 +562,7 @@ static INT32 chip_show_pse_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 			} else
 				continue;
 
-			fl_que_ctrl[0] |= (0x1 << 31);
+			fl_que_ctrl[0] |= (0x1U << 31);
 			HW_IO_WRITE32(pAd, PSE_FL_QUE_CTRL_0, fl_que_ctrl[0]);
 			HW_IO_READ32(pAd, PSE_FL_QUE_CTRL_2, &fl_que_ctrl[1]);
 			HW_IO_READ32(pAd, PSE_FL_QUE_CTRL_3, &fl_que_ctrl[2]);
@@ -602,7 +602,7 @@ static INT32 chip_show_cca_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 	RTMP_ADAPTER *pAd = ctrl->priv;
 
 	MAC_IO_READ32(pAd, RMAC_DEBUG_CR, &val);
-	val |= (1 << 31); /* For Band0 */
+	val |= (1U << 31); /* For Band0 */
 	MAC_IO_WRITE32(pAd, RMAC_DEBUG_CR, val);
 	/* Debug CR */
 	MAC_IO_WRITE32(pAd, (WF_CFG_OFF_BASE + 0x2c), 0xf);
@@ -614,18 +614,18 @@ static INT32 chip_show_cca_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 			 ("CCA for BAND0 info:\n"));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("-- CCA Prim: %d, SE20: %d, SEC40: %d\n",
-			  ((val & (1 << 14)) >> 14), ((val & (1 << 6)) >> 6),
-			  ((val & (1 << 5)) >> 5)));
+			  ((val & (1U << 14)) >> 14), ((val & (1U << 6)) >> 6),
+			  ((val & (1U << 5)) >> 5)));
 	MAC_IO_READ32(pAd, RMAC_DEBUG_CR, &val);
-	val &= ~(1 << 31); /* For Band1 */
+	val &= ~(1U << 31); /* For Band1 */
 	MAC_IO_WRITE32(pAd, RMAC_DEBUG_CR, val);
 	MAC_IO_READ32(pAd, (WF_CFG_BASE + 0x24), &val);
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("CCA for BAND1 info:\n"));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("-- CCA Prim: %d, SE20: %d, SEC40: %d\n",
-			  ((val & (1 << 14)) >> 14), ((val & (1 << 6)) >> 6),
-			  ((val & (1 << 5)) >> 5)));
+			  ((val & (1U << 14)) >> 14), ((val & (1U << 6)) >> 6),
+			  ((val & (1U << 5)) >> 5)));
 	return 0;
 }
 
@@ -640,10 +640,10 @@ static INT32 chip_set_cca_en(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 			 ("Enable CCA on Band0 SEC40: %s\n", (enable) ? "ON" : "OFF"));
 	/* RF CR for BAND0 CCA */
 	PHY_IO_READ32(pAd, PHY_BAND0_PHY_CCA, &val);
-	val |= ((1 << 18) | (1 << 2));
+	val |= ((1U << 18) | (1U << 2));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("-- Force Mode: %d, Force CCA SEC40: %d [0x%08x]\n",
-			  ((val & (1 << 18)) >> 18), ((val & (1 << 2)) >> 2), val));
+			  ((val & (1U << 18)) >> 18), ((val & (1U << 2)) >> 2), val));
 	PHY_IO_WRITE32(pAd, PHY_BAND0_PHY_CCA, val);
 	/* TMAC_TCR for the normal Tx BW */
 	MAC_IO_READ32(pAd, TMAC_TCR, &val);
@@ -715,7 +715,7 @@ static INT32 chip_show_dmasch_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 
 		HIF_DMASHDL_IO_READ32(pAd, qmapping_addr, &value);
 		mapping_group = (value & mapping_mask) >> mapping_offset;
-		Group_Mapping_Q[mapping_group] |= 1 << mapping_qidx;
+		Group_Mapping_Q[mapping_group] |= 1U << mapping_qidx;
 	}
 
 	MTWF_LOG(DBG_CAT_ALL, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("Dma scheduler info:\n"));
@@ -1113,7 +1113,7 @@ static INT32 chip_show_ple_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 			 ("PLE Configuration Info:\n"));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("\tPacket Buffer Control(0x82060014): 0x%08x\n", ple_buf_ctrl[0]));
-	pg_sz = (ple_buf_ctrl[0] & (0x1 << 31)) >> 31;
+	pg_sz = (ple_buf_ctrl[0] & (0x1U << 31)) >> 31;
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("\t\tPage Size=%d(%d bytes per page)\n", pg_sz, (pg_sz == 1 ? 128 : 64)));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
@@ -1141,7 +1141,7 @@ static INT32 chip_show_ple_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 			 ("\t\tBCN1 Release Pid/Qid=%d/%d\n", bit_field_2, bit_field_1));
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("\tHIF Report Control(0x82060034): 0x%08x\n", ple_buf_ctrl[2]));
-	bit_field_1 = ((ple_buf_ctrl[2] & (0x1 << 1)) >> 1);
+	bit_field_1 = ((ple_buf_ctrl[2] & (0x1U << 1)) >> 1);
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("\t\tHostReportQSel/HostReportDisable=%d/%d\n",
 			  (ple_buf_ctrl[2] & 0x1), bit_field_1));
@@ -1187,7 +1187,7 @@ static INT32 chip_show_ple_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("\t\tThe used/reserved pages of CPU group=0x%03x/0x%03x\n", upg_cpu, rpg_cpu));
 
-	if (((ple_stat[0] & (0x1 << 24)) >> 24) == 0) {
+	if (((ple_stat[0] & (0x1U << 24)) >> 24) == 0) {
 		MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 				 ("\tAC0_QUEUE_EMPTY0(0x82060300): 0x%08x\n", ple_stat[1]));
 		MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
@@ -1228,7 +1228,7 @@ static INT32 chip_show_ple_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 			}
 
 			for (i = 0; i < 32; i++) {
-				if (((ple_stat[j + 1] & (0x1 << i)) >> i) == 0) {
+				if (((ple_stat[j + 1] & (0x1U << i)) >> i) == 0) {
 					MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 							 ("%d ", i + (j % 4) * 32));
 				}
@@ -1241,12 +1241,12 @@ static INT32 chip_show_ple_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("Nonempty Q info:\n"));
 
 	for (i = 0; i < 31; i++) {
-		if (((ple_stat[0] & (0x1 << i)) >> i) == 0) {
+		if (((ple_stat[0] & (0x1U << i)) >> i) == 0) {
 			UINT32 hfid, tfid, pktcnt, fl_que_ctrl[3] = {0};
 
 			if (Queue_Empty_info[i].QueueName != NULL) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("\t%s: ", Queue_Empty_info[i].QueueName));
-				fl_que_ctrl[0] |= (0x1 << 31);
+				fl_que_ctrl[0] |= (0x1U << 31);
 				fl_que_ctrl[0] |= (Queue_Empty_info[i].Portid << 14);
 				fl_que_ctrl[0] |= (Queue_Empty_info[i].Queueid << 8);
 			} else
@@ -1269,7 +1269,7 @@ static INT32 chip_show_ple_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 
 	for (j = 0; j < 16; j++) { /* show AC Q info */
 		for (i = 0; i < 32; i++) {
-			if (((ple_stat[j + 1] & (0x1 << i)) >> i) == 0) {
+			if (((ple_stat[j + 1] & (0x1U << i)) >> i) == 0) {
 				UINT32 hfid, tfid, pktcnt, ac_num = j / 4, ctrlvalue = 0;
 				UINT32 sta_num = i + (j % 4) * 32, fl_que_ctrl[3] = {0};
 				struct wifi_dev *wdev = wdev_search_by_wcid(pAd, sta_num);
@@ -1280,7 +1280,7 @@ static INT32 chip_show_ple_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 						 ("\tSTA%d AC%d: ", sta_num, ac_num));
-				fl_que_ctrl[0] |= (0x1 << 31);
+				fl_que_ctrl[0] |= (0x1U << 31);
 				fl_que_ctrl[0] |= (0x2 << 14);
 				fl_que_ctrl[0] |= (ac_num << 8);
 				fl_que_ctrl[0] |= sta_num;
@@ -1294,10 +1294,10 @@ static INT32 chip_show_ple_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 						 ("tail/head fid = 0x%03x/0x%03x, pkt cnt = %x",
 						  tfid, hfid, pktcnt));
 
-				if (((sta_pause[j % 4] & 0x1 << i) >> i) == 1)
+				if (((sta_pause[j % 4] & 0x1U << i) >> i) == 1)
 					ctrlvalue = 2;
 
-				if (((dis_sta_map[j % 4] & 0x1 << i) >> i) == 1)
+				if (((dis_sta_map[j % 4] & 0x1U << i) >> i) == 1)
 					ctrlvalue = 1;
 
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF,
