@@ -44,6 +44,8 @@ static INT32 HQA_OpenAdapter(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -62,6 +64,8 @@ static INT32 HQA_CloseAdapter(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -80,6 +84,8 @@ static INT32 HQA_StartTx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 TxCount;
 	UINT16 TxLength;
@@ -114,6 +120,8 @@ static INT32 HQA_StartTxExt(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -126,6 +134,8 @@ static INT32 HQA_StartTxContiTx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -139,6 +149,8 @@ static INT32 HQA_StartTxCarrier(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -152,6 +164,8 @@ static INT32 HQA_StartRx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -169,6 +183,8 @@ static INT32 HQA_StopTx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -190,6 +206,8 @@ static INT32 HQA_StopContiTx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -208,6 +226,8 @@ static INT32 HQA_StopTxCarrier(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -221,6 +241,8 @@ static INT32 HQA_StopRx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -239,12 +261,15 @@ static INT32 HQA_SetTxPath(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT16 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 2);
 	Value = OS_NTOHS(Value);
 	Ret = ATEOp->SetTxAntenna(pAd, (CHAR)Value);
@@ -258,12 +283,15 @@ static INT32 HQA_SetRxPath(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT16 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 2);
 	Value = OS_NTOHS(Value);
 	Ret = ATEOp->SetRxAntenna(pAd, (CHAR)Value);
@@ -277,11 +305,14 @@ static INT32 HQA_SetTxIPG(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 
 	if (Value > 15)
@@ -301,12 +332,15 @@ static INT32 HQA_SetTxPower0(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT16 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 2);
 	Value = OS_NTOHS(Value);
 	Ret = ATEOp->SetTxPower0(pAd, Value);
@@ -326,6 +360,7 @@ static INT32 HAQ_SetTxPower1(
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 2);
 	Value = OS_NTOHS(Value);
 	Ret = ATEOp->SetTxPower1(pAd, Value);
@@ -360,11 +395,14 @@ static INT32 HQA_SetChannel(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	ATECtrl->Channel = Value;
@@ -386,11 +424,14 @@ static INT32 HQA_SetPreamble(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	ATECtrl->PhyMode = (UCHAR)Value;
@@ -404,11 +445,14 @@ static INT32 HQA_SetRate(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	ATECtrl->Mcs = (UCHAR)Value;
@@ -422,6 +466,8 @@ static INT32 HQA_SetNss(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -435,11 +481,14 @@ static INT32 HQA_SetSystemBW(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	ATECtrl->BW = Value;
@@ -461,6 +510,8 @@ static INT32 HQA_SetPerPktBW(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -474,6 +525,8 @@ static INT32 HQA_SetPrimaryBW(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -487,12 +540,15 @@ static INT32 HQA_SetFreqOffset(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	ATEOp->SetTxFreqOffset(pAd, (UINT32)Value);
@@ -506,6 +562,8 @@ static INT32 HQA_SetAutoResponder(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -519,6 +577,8 @@ static INT32 HQA_SetTssiOnOff(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0, WFSel = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -526,8 +586,10 @@ static INT32 HQA_SetTssiOnOff(
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 	/* ON/OFF:4 WF Sel:4 */
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&WFSel, HqaCmdFrame->Data + 4, 4);
 	WFSel = OS_NTOHL(WFSel);
 	ATEOp->SetTSSI(pAd, (CHAR)WFSel, (CHAR)Value);
@@ -541,6 +603,8 @@ static INT32 HQA_SetRxHighLowTemperatureCompensation(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -570,6 +634,8 @@ static INT32 HQA_ResetTxRxCounter(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
@@ -590,6 +656,8 @@ static INT32 HQA_GetStatistics(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -603,6 +671,8 @@ static INT32 HQA_GetRxOKData(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -616,6 +686,8 @@ static INT32 HQA_GetRxOKOther(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -629,6 +701,8 @@ static INT32 HQA_GetRxAllPktCount(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -642,6 +716,8 @@ static INT32 HQA_GetTxTransmitted(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -660,6 +736,8 @@ static INT32 HQA_GetHwCounter(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -673,6 +751,8 @@ static INT32 HQA_CalibrationOperation(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -720,6 +800,8 @@ static INT32 HQA_MacBbpRegRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Offset, Value;
 	BOOLEAN IsFound;
@@ -754,6 +836,8 @@ static INT32 HQA_MacBbpRegWrite(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Offset, Value;
 	BOOLEAN IsFound;
@@ -823,6 +907,8 @@ static INT32 HQA_MACBbpRegBulkRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Offset;
 	UINT16 Len, Tmp;
@@ -853,6 +939,8 @@ static INT32 HQA_RfRegBulkRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0, Index;
 	UINT32 WfSel, Offset, Length, Value;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -890,6 +978,8 @@ static INT32 HQA_RfRegBulkWrite(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0, Index;
 	UINT32 WfSel, Offset, Length, Value;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -927,6 +1017,8 @@ static INT32 HQA_ReadEEPROM(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 Offset = 0, Value = 0;
 
@@ -950,6 +1042,8 @@ static INT32 HQA_WriteEEPROM(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 Offset = 0, Value = 0;
 
@@ -974,6 +1068,8 @@ static INT32 HQA_ReadBulkEEPROM(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT16 Offset;
 	UINT16 Len;
@@ -1018,6 +1114,8 @@ static INT32 HQA_WriteBulkEEPROM(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	USHORT Offset;
 	USHORT Len;
@@ -1061,6 +1159,8 @@ static INT32 HQA_CheckEfuseMode(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Value = 0;
 
@@ -1083,6 +1183,8 @@ static INT32 HQA_GetFreeEfuseBlock(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 Value = 0;
 
@@ -1100,6 +1202,8 @@ static INT32 HQA_GetEfuseBlockNr(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1113,6 +1217,8 @@ static INT32 HQA_WriteEFuseFromBuffer(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1147,6 +1253,8 @@ static INT32 HQA_ReadTempReferenceValue(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1171,6 +1279,8 @@ static INT32 HQA_GetThermalValue(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	UINT32 SensorResult = 0;
@@ -1190,6 +1300,8 @@ static INT32 HQA_SetSideBandOption(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1211,6 +1323,8 @@ static INT32 HQA_GetFWInfo(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -1227,6 +1341,8 @@ static INT32 HQA_GetRxStatisticsAll(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	UINT32 value = 0;
 	UINT32 IBRssi0, IBRssi1, WBRssi0, WBRssi1;
@@ -1298,6 +1414,8 @@ static INT32 HQA_StartContinousTx(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	INT32 Value = 0, WFSel = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -1305,6 +1423,7 @@ static INT32 HQA_StartContinousTx(
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 	/* Modulation:4 BW:4 PRI_CH:4 RATE:4 WFSel:4 */
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	ATECtrl->PhyMode = (UCHAR)Value;
@@ -1317,6 +1436,7 @@ static INT32 HQA_StartContinousTx(
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data + 12, 4);
 	Value = OS_NTOHL(Value);
 	ATECtrl->Mcs = (UCHAR)Value;
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&WFSel, (PUCHAR)&HqaCmdFrame->Data + 16, 4);
 	WFSel = OS_NTOHL(WFSel);
 	/* ATECtrl->TxAntennaSel = WFSel; */
@@ -1331,11 +1451,14 @@ static INT32 HQA_SetSTBC(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	ATECtrl->Stbc = (UCHAR)Value;
@@ -1349,11 +1472,14 @@ static INT32 HQA_SetShortGI(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	ATECtrl->Sgi = (UCHAR)Value;
@@ -1367,6 +1493,8 @@ static INT32 HQA_SetDPD(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0, WFSel = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -1374,8 +1502,10 @@ static INT32 HQA_SetDPD(
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 	/* ON/OFF:4 WF Sel:4 */
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&WFSel, (PUCHAR)&HqaCmdFrame->Data + 4, 4);
 	WFSel = OS_NTOHL(WFSel);
 	ATEOp->SetDPD(pAd, (CHAR)WFSel, (CHAR)Value);
@@ -1389,12 +1519,15 @@ static INT32 HQA_StartContiTxTone(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	ATEOp->StartTxTone(pAd, Value);
@@ -1407,6 +1540,8 @@ static INT32 HQA_StopContiTxTone(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -1422,14 +1557,18 @@ static INT32 HQA_CalibrationTestMode(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0;
 	INT32 ICapLen = 0;
 	INT32 Ret = 0;
 	UINT8  Mode = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&ICapLen, (PUCHAR)&HqaCmdFrame->Data + 4, 4);
 	ICapLen = OS_NTOHL(ICapLen);
 
@@ -1451,10 +1590,13 @@ static INT32 HQA_DoCalibrationTestItem(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Value = 0;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	/* CmdRfTest(pAd, ACTION_IN_RFTEST, 0, Value); */
@@ -1468,6 +1610,8 @@ static INT32 HQA_eFusePhysicalWrite(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1481,6 +1625,8 @@ static INT32 HQA_eFusePhysicalRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1494,6 +1640,8 @@ static INT32 HQA_eFuseLogicalRead(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1507,6 +1655,8 @@ static INT32 HQA_eFuseLogicalWrite(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1520,6 +1670,8 @@ static INT32 HQA_TMRSetting(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
@@ -1533,6 +1685,8 @@ static INT32 HQA_GetRxSNR(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Ret = 0, Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
@@ -1551,10 +1705,13 @@ static INT32 HQA_WriteBufferDone(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	INT32 Ret = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 
@@ -1589,10 +1746,13 @@ static INT32 HQA_FFT(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	INT32 Ret = 0;
 	static UINT32 RFCR, OMA0R0, OMA0R1, OMA1R0, OMA1R1, OMA2R0, OMA2R1, OMA3R0, OMA3R1, OMA4R0, OMA4R1;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	Value = OS_NTOHL(Value);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s: %d\n", __func__, Value));
@@ -1649,6 +1809,8 @@ static INT32 HQA_FFT(
 }
 static INT32 HQA_SetTxTonePower(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	UINT32 Value = 0;
 	INT32 Ret = 0;
 	INT32 pwr1 = 0;
@@ -1656,6 +1818,7 @@ static INT32 HQA_SetTxTonePower(PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data, 4);
 	pwr1 = OS_NTOHL(Value);
 	memcpy((PUCHAR)&Value, (PUCHAR)&HqaCmdFrame->Data + 4, 4);
@@ -1731,6 +1894,8 @@ static INT32 HQA_CMDHandler(
 	RTMP_IOCTL_INPUT_STRUCT *WRQ,
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
+	if (!pAd || !HqaCmdFrame)
+		return -1;
 	INT32 Status = NDIS_STATUS_SUCCESS;
 	USHORT CmdId;
 	UINT32 TableIndex = 0;
@@ -1769,6 +1934,9 @@ INT32 RtmpDoAte(
 	INT32 Status = NDIS_STATUS_SUCCESS;
 	struct _HQA_CMD_FRAME *HqaCmdFrame;
 	UINT32 ATEMagicNum;
+
+	if (!pAd)
+		return NDIS_STATUS_FAILURE;
 
 	os_alloc_mem_suspend(pAd, (UCHAR **)&HqaCmdFrame, sizeof(*HqaCmdFrame));
 
