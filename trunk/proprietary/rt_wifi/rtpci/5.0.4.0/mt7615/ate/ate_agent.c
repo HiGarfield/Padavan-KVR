@@ -2235,6 +2235,9 @@ static INT ATEMacStr2Hex(RTMP_STRING *arg, UINT8 *mac)
 
 INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val)
 {
+	if (!pAd || !type || !val)
+		return NDIS_STATUS_FAILURE;
+
 	POS_COOKIE pObj = (POS_COOKIE) pAd->OS_Cookie;
 	struct wifi_dev *wdev = get_wdev_by_ioctl_idx_and_iftype(pAd, pObj->ioctl_if, pObj->ioctl_if_type);
 	UINT8 mac[MAC_ADDR_LEN] = {0};
@@ -2270,11 +2273,11 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			NdisZeroMemory(&mac[0], MAC_ADDR_LEN);
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s Invalid MAC address(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid MAC address(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		NdisMoveMemory(&pAd->AteManualConnInfo.peer_mac[0], mac, MAC_ADDR_LEN);
@@ -2292,7 +2295,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid type(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.peer_op_type = op_type;
@@ -2308,13 +2311,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (wtbl_idx <= 0 || wtbl_idx > 127) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid wtbl idx(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				wtbl_idx = 1;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid wtbl idx(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.wtbl_idx = wtbl_idx;
@@ -2331,13 +2334,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 				(((own_mac_idx - 0) > 4) ? ((own_mac_idx - 0x10) > 0xf):FALSE)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid OwnMac idx(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				own_mac_idx = 1;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid wtbl idx(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.ownmac_idx = own_mac_idx;
@@ -2353,13 +2356,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(pfmuId >= 0x00 && pfmuId <= 0x3f)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid PFMU idx(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				pfmuId = 0;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid PFMU idx(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.pfmuId = pfmuId;
@@ -2375,13 +2378,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(aid >= 0x00 && aid <= 2007)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid aid(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				aid = 0;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid aid(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.aid = aid;
@@ -2397,13 +2400,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(speIdx >= 0 && speIdx <= 30)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid SPE idx(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				speIdx = 24;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid SPE idx(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.spe_idx = speIdx;
@@ -2418,13 +2421,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(fgIsMuBFee == 0 || fgIsMuBFee == 1)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid mubfee(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				fgIsMuBFee = 0;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid mubfee(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		if (fgIsMuBFee)
@@ -2441,13 +2444,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(fgIsSGIFor160 == 0 || fgIsSGIFor160 == 1)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid sgi160(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				fgIsSGIFor160 = 0;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid sgi160(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		if (fgIsSGIFor160)
@@ -2464,13 +2467,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(fgIsSGIFor80 == 0 || fgIsSGIFor80 == 1)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid sgi80(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				fgIsSGIFor80 = 0;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid sgi80(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		if (fgIsSGIFor80)
@@ -2487,13 +2490,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(fgIsSGIFor40 == 0 || fgIsSGIFor40 == 1)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid sgi40(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				fgIsSGIFor40 = 0;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid sgi40(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		if (fgIsSGIFor40)
@@ -2510,13 +2513,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(fgIsSGIFor20 == 0 || fgIsSGIFor20 == 1)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid sgi20(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				fgIsSGIFor20 = 0;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid sgi20(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		if (fgIsSGIFor20)
@@ -2533,13 +2536,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(mcsSupport >= 0 && mcsSupport <= 3)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid rxmcsnss1(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				mcsSupport = 3;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid rxmcsnss1(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.vht_mcs_set.rx_mcs_map.mcs_ss1 = mcsSupport;
@@ -2554,13 +2557,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(mcsSupport >= 0 && mcsSupport <= 3)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid rxmcsnss2(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				mcsSupport = 3;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid rxmcsnss2(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.vht_mcs_set.rx_mcs_map.mcs_ss2 = mcsSupport;
@@ -2575,13 +2578,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(mcsSupport >= 0 && mcsSupport <= 3)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid rxmcsnss3(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				mcsSupport = 3;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid rxmcsnss3(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.vht_mcs_set.rx_mcs_map.mcs_ss3 = mcsSupport;
@@ -2596,13 +2599,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(mcsSupport >= 0 && mcsSupport <= 3)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid rxmcsnss4(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				mcsSupport = 3;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid rxmcsnss4(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.vht_mcs_set.rx_mcs_map.mcs_ss4 = mcsSupport;
@@ -2617,13 +2620,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(fgIsSuBFee == 0 || fgIsSuBFee == 1)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid subfee(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				fgIsSuBFee = 0;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid subfee(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		if (fgIsSuBFee)
@@ -2640,13 +2643,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (!(bFeeNsts >= 0 && bFeeNsts < 4)) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid bfeensts(%s), use default\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				bFeeNsts = 4;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid bfeensts(%s), use default\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.vht_cap_info.bfee_sts_cap = bFeeNsts;
@@ -2693,7 +2696,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		pAd->AteManualConnInfo.peer_phy_mode = phy_mode;
 		MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 				 ("%s: phy_mode=%s, convert to PhyMode= 0x%x\n",
-				  __func__, (val == NULL ? "" : val), phy_mode));
+				  __func__, val, phy_mode));
 	}
 
 	/* bw:20/40/80/160 */
@@ -2725,7 +2728,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid BW string(%s), use default!\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 		}
 
 		pAd->AteManualConnInfo.peer_bw = bw;
@@ -2751,7 +2754,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (nss > ucTxPath) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid NSS string(%s), use default!\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				nss = 1;
 			}
 		} else {
@@ -2772,7 +2775,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (rca2 > 1) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid RCA2 string(%s), use default!\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				rca2 = 0;
 			}
 		} else {
@@ -2793,7 +2796,7 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			if (rv > 1) {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid RV string(%s), use default!\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				rv = 0;
 			}
 		} else {
@@ -2819,13 +2822,13 @@ INT ATEManualParsingParam(RTMP_ADAPTER *pAd, RTMP_STRING *type, RTMP_STRING *val
 			} else {
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 						 ("\t%s: Invalid maxmcs setting(%s), use default!\n",
-						  __func__, (val == NULL ? "" : val)));
+						  __func__, val));
 				goto maxrate_final;
 			}
 		} else {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 					 ("\t%s: Invalid maxrate setting(%s), use default!\n",
-					  __func__, (val == NULL ? "" : val)));
+					  __func__, val));
 			goto maxrate_final;
 		}
 
