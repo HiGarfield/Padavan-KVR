@@ -376,6 +376,11 @@ static void
 websScan(const char *query)
 {
 #define SCAN_MAX_VALUE_LEN 256
+
+/* SSID length accepted by the WebUI (maxlength="32") and by the drivers.
+ * char_to_ascii() expands one byte into at most three, so the encoded
+ * form of a full-length SSID needs 3*MAX_SSID_LEN+1 bytes. */
+#define MAX_SSID_LEN		32
 	unsigned int i, flag, i_len;
 	const char *v1, *v2, *v3, *sp;
 	char groupid[64];
@@ -966,9 +971,13 @@ validate_asp_apply(webs_t wp, int sid)
 		{
 			if (!strcmp(v->name, "wl_ssid"))
 			{
-				memset(buff, 0, sizeof(buff));
-				char_to_ascii(buff, value);
-				nvram_set("wl_ssid2", buff);
+				char ssid[MAX_SSID_LEN + 1];
+				char ssid2[MAX_SSID_LEN * 3 + 1];
+
+				snprintf(ssid, sizeof(ssid), "%s", value);
+				memset(ssid2, 0, sizeof(ssid2));
+				char_to_ascii(ssid2, ssid);
+				nvram_set("wl_ssid2", ssid2);
 			}
 			
 			if (!strcmp(v->name, "wl_TxPower"))
@@ -1039,9 +1048,13 @@ validate_asp_apply(webs_t wp, int sid)
 		{
 			if (!strcmp(v->name, "rt_ssid"))
 			{
-				memset(buff, 0, sizeof(buff));
-				char_to_ascii(buff, value);
-				nvram_set("rt_ssid2", buff);
+				char ssid[MAX_SSID_LEN + 1];
+				char ssid2[MAX_SSID_LEN * 3 + 1];
+
+				snprintf(ssid, sizeof(ssid), "%s", value);
+				memset(ssid2, 0, sizeof(ssid2));
+				char_to_ascii(ssid2, ssid);
+				nvram_set("rt_ssid2", ssid2);
 			}
 			
 			if (!strcmp(v->name, "rt_TxPower"))
