@@ -85,13 +85,17 @@ static INT32 resp_to_meta(INT32 ioctl_cmd, struct _META_CMD_HDR *rsp, RTMP_IOCTL
 
 static INT32 wifi_sub_test_stop(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
+
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	INT32 ret = 0;
 	INT32 val = 0;
 	UINT32 Mode;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 
 	switch (g_SUB_TEST_STATE) {
@@ -150,6 +154,8 @@ static INT32 wifi_sub_test_stop(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_I
 
 static INT32 wifi_sub_test_start_tx(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -168,6 +174,8 @@ static INT32 wifi_sub_test_start_tx(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_sub_test_start_rx(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -182,6 +190,8 @@ static INT32 wifi_sub_test_start_rx(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_sub_test_reset(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -231,12 +241,15 @@ static INT32 wifi_sub_test_reset(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_
 
 static INT32 wifi_sub_test_output_pwr(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	/* TODO: Correct band selection */
 	ret = ATEOp->StartContinousTx(pAd, ATECtrl->TxAntennaSel, TESTMODE_BAND0);
@@ -248,6 +261,8 @@ static INT32 wifi_sub_test_output_pwr(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_I
 
 static INT32 wifi_sub_test_local_freq(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -258,6 +273,7 @@ static INT32 wifi_sub_test_local_freq(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_I
 	INT32 pwr2 = 0;
 	CHAR txpwr = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 
 	/* TxAntennaSel, 0: All 1:TX0 2:TX1 */
@@ -288,6 +304,8 @@ meta_tx_suppress_done:
 
 static INT32 wifi_sub_test_rf_suppression(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -298,6 +316,7 @@ static INT32 wifi_sub_test_rf_suppression(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RT
 	INT32 pwr2 = 0;
 	CHAR txpwr = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 
 	/* TxAntennaSel, 0: All 1:TX0 2:TX1 */
@@ -328,6 +347,8 @@ meta_tx_suppress_done:
 
 static INT32 wifi_sub_test_trx_iq_cali(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -335,6 +356,7 @@ static INT32 wifi_sub_test_trx_iq_cali(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_
 
 	/* UINT8 Action = 0, Mode = 0, CalItem = 0; */
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	/*
 	 * Enter RF test mode
@@ -359,12 +381,15 @@ static INT32 wifi_sub_test_trx_iq_cali(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_
 
 static INT32 wifi_sub_test_tssi_cali(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	/*
 	 * Enter RF test mode
@@ -383,12 +408,15 @@ static INT32 wifi_sub_test_tssi_cali(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IO
 
 static INT32 wifi_sub_test_dpd_cali(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	/*
 	 * Enter RF test mode
@@ -407,12 +435,15 @@ static INT32 wifi_sub_test_dpd_cali(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_sub_test_conti_waveform(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	/* TODO: Correct band selection */
 	ret = ATEOp->StartContinousTx(pAd, ATECtrl->TxAntennaSel, TESTMODE_BAND0);
@@ -424,12 +455,15 @@ static INT32 wifi_sub_test_conti_waveform(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RT
 
 static INT32 wifi_sub_test_start_icap(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
 	return ret;
@@ -452,6 +486,8 @@ static META_CMD_HANDLER WIFI_TEST_CMD_SUBTEST[] = {
 
 static INT32 wifi_test_version(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	INT32 status = NDIS_STATUS_SUCCESS;
 
@@ -463,6 +499,8 @@ static INT32 wifi_test_version(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_IN
 
 static INT32 wifi_test_cmd(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	UINT32 op = param->data;
@@ -478,12 +516,15 @@ static INT32 wifi_test_cmd(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_
 
 static INT32 wifi_test_pwr_cfg(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, sizeof(val));
 	/* val = OS_NTOHS(val); */
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s, val:0x%x\n", __func__, val));
@@ -497,11 +538,14 @@ static INT32 wifi_test_pwr_cfg(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_IN
 
 static INT32 wifi_test_rate_cfg(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, sizeof(val));
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s, val:0x%x\n", __func__, val));
 
@@ -540,11 +584,14 @@ static INT32 wifi_test_rate_cfg(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_I
 
 static INT32 wifi_test_preamble_cfg(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s: Val: %x\n", __func__, val));
 
@@ -580,12 +627,15 @@ static INT32 wifi_test_preamble_cfg(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_test_antenna_cfg(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s: Val: %x\n", __func__, val));
 	ret = ATEOp->SetTxAntenna(pAd, (CHAR)val);
@@ -596,11 +646,14 @@ static INT32 wifi_test_antenna_cfg(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_pkt_len_cfg(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 
 	if ((val < 24) || (val > (MAX_FRAME_SIZE - 34/* == 2312 */))) {
@@ -617,11 +670,14 @@ static INT32 wifi_test_pkt_len_cfg(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_set_pkt_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	UINT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s, val: %u\n", __func__, val));
 
@@ -638,6 +694,8 @@ static INT32 wifi_test_set_pkt_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
  */
 static INT32 wifi_test_set_pkt_interval(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -646,6 +704,7 @@ static INT32 wifi_test_set_pkt_interval(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP
 	UINT32 slot_t = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	/* TODO: "Val will be round-up to (19+9n)us", quoted from doc. Ref. 6630 FW */
 	slot_t = (val - 19 + SLOT_TIME_SHORT - 1) / SLOT_TIME_SHORT;
@@ -656,30 +715,38 @@ static INT32 wifi_test_set_pkt_interval(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP
 
 static INT32 wifi_test_tmp_comp(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	return ret;
 }
 
 static INT32 wifi_test_txop_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	return ret;
 }
 
 static INT32 wifi_test_set_ack(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -689,6 +756,8 @@ static INT32 wifi_test_set_ack(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_IN
 
 static INT32 wifi_test_set_pkt_content(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -698,6 +767,8 @@ static INT32 wifi_test_set_pkt_content(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_
 
 static INT32 wifi_test_set_retry_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -707,11 +778,14 @@ static INT32 wifi_test_set_retry_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IO
 
 static INT32 wifi_test_set_qos_q(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 
 	if (val > 4)
@@ -724,12 +798,15 @@ static INT32 wifi_test_set_qos_q(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_
 
 static INT32 wifi_test_set_bw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s, val: 0x%x\n", __func__, val));
 
@@ -789,11 +866,14 @@ _meta_set_bw_err:
  */
 static INT32 wifi_test_set_gi(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s, val:0x%x\n", __func__, val));
 
@@ -807,12 +887,15 @@ static INT32 wifi_test_set_gi(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INP
 
 static INT32 wifi_test_set_stbc(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	ATECtrl->Stbc = (UCHAR)val;
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
@@ -821,12 +904,15 @@ static INT32 wifi_test_set_stbc(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_I
 
 static INT32 wifi_test_set_ch_freq(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 	INT32 ch = 1;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	/* TODO: Need to check the value passed from host */
 	RTMP_MapKHZ2ChannelID(val / 1000, &ch);
@@ -858,12 +944,15 @@ static INT32 wifi_test_set_ch_freq(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_set_rifs(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
 	return ret;
@@ -871,12 +960,15 @@ static INT32 wifi_test_set_rifs(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_I
 
 static INT32 wifi_test_tr_switch(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
 	return ret;
@@ -884,12 +976,15 @@ static INT32 wifi_test_tr_switch(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_
 
 static INT32 wifi_test_rf_sx_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
 	return ret;
@@ -897,12 +992,15 @@ static INT32 wifi_test_rf_sx_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_I
 
 static INT32 wifi_test_pll_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
 	return ret;
@@ -910,12 +1008,15 @@ static INT32 wifi_test_pll_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INP
 
 static INT32 wifi_test_slow_clk_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
 	return ret;
@@ -923,12 +1024,15 @@ static INT32 wifi_test_slow_clk_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_adc_clk_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
 	return ret;
@@ -936,12 +1040,15 @@ static INT32 wifi_test_adc_clk_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_test_measure_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
 	return ret;
@@ -949,12 +1056,15 @@ static INT32 wifi_test_measure_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_test_vlt_comp(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
 	return ret;
@@ -962,6 +1072,8 @@ static INT32 wifi_test_vlt_comp(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_I
 
 static INT32 wifi_test_get_dpd_tx_gain(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -972,6 +1084,8 @@ static INT32 wifi_test_get_dpd_tx_gain(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_
 
 static INT32 wifi_test_dpd_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -982,6 +1096,8 @@ static INT32 wifi_test_dpd_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INP
 
 static INT32 wifi_test_tssi_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -990,8 +1106,10 @@ static INT32 wifi_test_tssi_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_IN
 	INT32 wf_sel = 0;
 
 	/* TODO: Plan to use upper 16 bits for antenna selection, lower 16 bits for on/off */
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	val = val & 0x0000ffff;
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&wf_sel, &param->data, 4);
 	wf_sel = ((wf_sel & 0xffff0000) >> 16) & 0x0000ffff;
 	ATEOp->SetTSSI(pAd, (CHAR)wf_sel, (CHAR)val);
@@ -1001,6 +1119,8 @@ static INT32 wifi_test_tssi_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_IN
 
 static INT32 wifi_test_get_tx_gain_code(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1011,6 +1131,8 @@ static INT32 wifi_test_get_tx_gain_code(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP
 
 static INT32 wifi_test_tx_pwr_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1056,6 +1178,8 @@ static META_CMD_HANDLER WIFI_TEST_CMD_SET1[] = {
 
 static INT32 wifi_test_get_tx_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1067,6 +1191,8 @@ static INT32 wifi_test_get_tx_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL
 
 static INT32 wifi_test_get_tx_ok_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1077,6 +1203,8 @@ static INT32 wifi_test_get_tx_ok_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IO
 
 static INT32 wifi_test_rx_ok_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)(&cmd_hdr->data);
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1099,6 +1227,8 @@ static INT32 wifi_test_rx_ok_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_
 
 static INT32 wifi_test_rx_err_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)(&cmd_hdr->data);
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1115,6 +1245,8 @@ static INT32 wifi_test_rx_err_cnt(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL
 
 static INT32 wifi_test_get_result_len(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1126,6 +1258,8 @@ static INT32 wifi_test_get_result_len(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_I
 
 static INT32 wifi_test_get_trx_iq_cal(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1137,6 +1271,8 @@ static INT32 wifi_test_get_trx_iq_cal(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_I
 
 static INT32 wifi_test_get_tssi_cal(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1148,6 +1284,8 @@ static INT32 wifi_test_get_tssi_cal(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_test_get_dpd_cal(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1159,6 +1297,8 @@ static INT32 wifi_test_get_dpd_cal(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_rxv_dump(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1170,6 +1310,8 @@ static INT32 wifi_test_rxv_dump(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_I
 
 static INT32 wifi_test_get_rx_stat(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1182,6 +1324,8 @@ static INT32 wifi_test_get_rx_stat(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_get_rpi_ipi(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1192,6 +1336,8 @@ static INT32 wifi_test_get_rpi_ipi(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_get_tmp_sensor(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1203,6 +1349,8 @@ static INT32 wifi_test_get_tmp_sensor(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_I
 
 static INT32 wifi_test_get_vlt_sensor(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1214,6 +1362,8 @@ static INT32 wifi_test_get_vlt_sensor(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_I
 
 static INT32 wifi_test_read_efuse(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1225,6 +1375,8 @@ static INT32 wifi_test_read_efuse(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL
 
 static INT32 wifi_test_get_rx_rssi(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1250,6 +1402,8 @@ static INT32 wifi_test_get_rx_rssi(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_get_fw_info(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0x0001;
@@ -1262,6 +1416,8 @@ static INT32 wifi_test_get_fw_info(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_get_dri_info(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0x7636;
@@ -1274,6 +1430,8 @@ static INT32 wifi_test_get_dri_info(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_test_get_pwr_detector(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1285,6 +1443,8 @@ static INT32 wifi_test_get_pwr_detector(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP
 
 static INT32 wifi_test_get_phy_rssi(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	UINT32 IBRssi0, IBRssi1, WBRssi0, WBRssi1;
@@ -1324,6 +1484,8 @@ static INT32 wifi_test_get_phy_rssi(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_test_get_rx_rssi1(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1349,6 +1511,8 @@ static INT32 wifi_test_get_rx_rssi1(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_test_pwr_cfg_tx1(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	UINT32 value = 0;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
@@ -1356,6 +1520,7 @@ static INT32 wifi_test_pwr_cfg_tx1(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, sizeof(val));
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s, val:0x%x\n", __func__, val));
 	pAd->ATECtrl.TxPower1 = val;
@@ -1367,12 +1532,15 @@ static INT32 wifi_test_pwr_cfg_tx1(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_tx_path_sel(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s: Val: %x\n", __func__, val));
 	ret = ATEOp->SetTxAntenna(pAd, (CHAR)val);
@@ -1381,12 +1549,15 @@ static INT32 wifi_test_tx_path_sel(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_rx_path_sel(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s: Val: %x\n", __func__, val));
 	ret = ATEOp->SetRxAntenna(pAd, (CHAR)val);
@@ -1430,6 +1601,8 @@ static META_CMD_HANDLER WIFI_TEST_CMD_SET2[] = {
 
 static INT32 wifi_test_set_dpd(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1441,11 +1614,14 @@ static INT32 wifi_test_set_dpd(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_IN
 
 static INT32 wifi_test_set_cw_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s, val: %d, Ant: 0x%x\n", __func__, val, ATECtrl->TxAntennaSel));
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
@@ -1454,6 +1630,8 @@ static INT32 wifi_test_set_cw_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_jp_ch_flt_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1465,6 +1643,8 @@ static INT32 wifi_test_jp_ch_flt_en(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOC
 
 static INT32 wifi_test_write_efuse(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1478,6 +1658,8 @@ static INT32 wifi_test_write_efuse(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_set_ra(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1489,6 +1671,8 @@ static INT32 wifi_test_set_ra(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INP
 
 static INT32 wifi_test_set_ta(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1500,6 +1684,8 @@ static INT32 wifi_test_set_ta(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INP
 
 static INT32 wifi_test_set_rx_match_rule(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1512,6 +1698,8 @@ static INT32 wifi_test_set_rx_match_rule(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTM
 
 static INT32 wifi_test_set_ch_bw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -1519,6 +1707,7 @@ static INT32 wifi_test_set_ch_bw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 
 	switch (val) {
@@ -1549,12 +1738,15 @@ static INT32 wifi_test_set_ch_bw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_
 
 static INT32 wifi_test_set_data_bw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	/* struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp; */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s, val:0x%x\n", __func__, val));
 
@@ -1586,6 +1778,8 @@ static INT32 wifi_test_set_data_bw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_set_primary(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	/* struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp; */
@@ -1593,6 +1787,7 @@ static INT32 wifi_test_set_primary(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	ATECtrl->ControlChl = val;
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
@@ -1601,12 +1796,15 @@ static INT32 wifi_test_set_primary(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCT
 
 static INT32 wifi_test_set_encode_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
 	INT32 val = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s\n", __func__));
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	/* ATECtrl->Ldpc = val; */
 	resp_to_meta(ioctl_cmd, cmd_hdr, WRQ, 0, ret);
@@ -1615,6 +1813,8 @@ static INT32 wifi_test_set_encode_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_
 
 static INT32 wifi_test_set_jmode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _PARAM_MTK_WIFI_TEST *param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -1625,6 +1825,7 @@ static INT32 wifi_test_set_jmode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_
 	INT32 pwr2 = 0;
 	CHAR txpwr = 0;
 
+	/* cppcheck-suppress nullPointer */
 	memcpy((PUCHAR)&val, &param->data, 4);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s, val: %d, Ant: 0x%x\n", __func__, val, ATECtrl->TxAntennaSel));
 
@@ -1677,6 +1878,8 @@ meta_jmode_done:
 
 static INT32 wifi_test_set_inter_cap_cont(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1688,6 +1891,8 @@ static INT32 wifi_test_set_inter_cap_cont(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RT
 
 static INT32 wifi_test_set_inter_cap_trig(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1699,6 +1904,8 @@ static INT32 wifi_test_set_inter_cap_trig(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RT
 
 static INT32 wifi_test_set_inter_cap_size(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1710,6 +1917,8 @@ static INT32 wifi_test_set_inter_cap_size(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RT
 
 static INT32 wifi_test_set_inter_cap_trig_offset(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1750,6 +1959,8 @@ static META_CMD_HANDLER WIFI_TEST_CMD_SET3[] = {
 
 static INT32 wifi_test_set_mod_patch(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	/* struct _PARAM_MTK_WIFI_TEST* param = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data; */
 	/* struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl); */
 	INT32 ret = NDIS_STATUS_SUCCESS;
@@ -1793,7 +2004,6 @@ static META_CMD_HANDLER WIFI_TEST_CMD_SET5[] = {
 	NULL,
 };
 
-
 /*
  *	Command Set for OID_CUSTOM_MTK_WIFI_TEST
  */
@@ -1810,6 +2020,8 @@ static META_CMD_HANDLER *WIFI_TEST_CMD_SETS[] = {
  */
 static INT32 oid_if_version(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _META_CMD_HDR *cmd = cmd_hdr;
 	INT32 status = NDIS_STATUS_SUCCESS;
 	UINT32 value = 0x00006620;
@@ -1825,6 +2037,8 @@ static INT32 oid_if_version(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT
  */
 static INT32 oid_mcr_rw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	PARAM_CUSTOM_MCR_RW *cmd = (PARAM_CUSTOM_MCR_RW *)cmd_hdr->data;
 	INT32 status = NDIS_STATUS_SUCCESS;
 	UINT32 value = 0;
@@ -1863,6 +2077,8 @@ _mcr_rw_err:
  */
 static INT32 oid_eeprom_rw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	PARAM_CUSTOM_EEPROM_RW *cmd = (PARAM_CUSTOM_EEPROM_RW *)cmd_hdr->data;
 	INT32 status = NDIS_STATUS_SUCCESS;
 
@@ -1876,6 +2092,8 @@ static INT32 oid_eeprom_rw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_
  */
 static INT32 oid_efuse_rw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	PARAM_CUSTOM_EFUSE_RW *cmd = (PARAM_CUSTOM_EFUSE_RW *)cmd_hdr->data;
 	INT32 status = NDIS_STATUS_SUCCESS;
 
@@ -1889,6 +2107,8 @@ static INT32 oid_efuse_rw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_S
  */
 static INT32 oid_test_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	INT32 status = NDIS_STATUS_SUCCESS;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -1911,6 +2131,8 @@ static INT32 oid_test_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_
  */
 static INT32 oid_abort_test_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	INT32 status = NDIS_STATUS_SUCCESS;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -1928,6 +2150,8 @@ static INT32 oid_abort_test_mode(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_
  */
 static INT32 oid_mt_wifi_test(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	INT32 status = NDIS_STATUS_SUCCESS;
 	struct _PARAM_MTK_WIFI_TEST *cmd = (struct _PARAM_MTK_WIFI_TEST *)cmd_hdr->data;
 	INT32 idx = 0;
@@ -1953,6 +2177,8 @@ err_handle:
 
 static INT32 oid_cfg_src_type(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _META_CMD_HDR *cmd = cmd_hdr;
 	INT32 status = NDIS_STATUS_SUCCESS;
 	UINT32 value = 1; /* 1 For NVRAM */
@@ -1965,6 +2191,8 @@ static INT32 oid_cfg_src_type(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INP
 
 static INT32 oid_eeprom_type(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	struct _META_CMD_HDR *cmd = cmd_hdr;
 	INT32 status = NDIS_STATUS_SUCCESS;
 	UINT32 value = 0; /* 0 For EEPROM Not Present */
@@ -1977,12 +2205,15 @@ static INT32 oid_eeprom_type(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPU
 
 static INT32 oid_nvram_rw(INT32 ioctl_cmd, PRTMP_ADAPTER pAd, RTMP_IOCTL_INPUT_STRUCT *WRQ, struct _META_CMD_HDR *cmd_hdr)
 {
+	if (!pAd || !cmd_hdr)
+		return -1;
 	PARAM_CUSTOM_NVRAM_RW *cmd = (PARAM_CUSTOM_NVRAM_RW *)cmd_hdr->data;
 	INT32 status = NDIS_STATUS_SUCCESS;
 	UINT16 value = 0;
 	UINT8 idx = cmd->idx << 1;
 
 	if (ioctl_cmd == MTPRIV_IOCTL_META_SET) {
+		/* cppcheck-suppress nullPointer */
 		memcpy((PUCHAR)&value, &cmd->data, 4);
 		pAd->EEPROMImage[idx] = (0xff00 & value) >> 8;
 		pAd->EEPROMImage[idx + 1] = (0x00ff & value);
@@ -2027,6 +2258,9 @@ INT32 do_meta_cmd(INT32 ioctl_cmd, PRTMP_ADAPTER	pAd, RTMP_IOCTL_INPUT_STRUCT *W
 	struct _META_CMD_HDR *cmd_hdr;
 	UINT32 oid = 0;
 	INT32 ret = 0;
+
+	if (!pAd)
+		return NDIS_STATUS_FAILURE;
 
 	os_alloc_mem_suspend(pAd, (UCHAR **)&cmd_hdr, sizeof(*cmd_hdr));
 
