@@ -422,31 +422,49 @@ restart_all_sysctl(void)
 }
 
 void
-char_to_ascii(char *output, char *input)
+char_to_ascii(char *output, size_t osize, char *input)
 {
 	int i;
-	char tmp[10];
-	char *ptr;
+	char tmp[4];
+	size_t tlen;
+	size_t olen = 0;
 
-	ptr = output;
+	if (!output || osize == 0)
+		return;
 
-	for ( i=0; i<strlen(input); i++ ) {
-		if ((input[i]>='0' && input[i] <='9')
-		   ||(input[i]>='A' && input[i]<='Z')
+	/* always terminate, even when the caller passes an empty/invalid input */
+	output[0] = '\0';
+
+	if (!input)
+		return;
+
+	for (i = 0; i < (int)strlen(input); i++) {
+		if ((input[i] >= '0' && input[i] <= '9')
+		   ||(input[i] >= 'A' && input[i] <= 'Z')
 		   ||(input[i] >='a' && input[i]<='z')
 		   || input[i] == '!' || input[i] == '*'
 		   || input[i] == '(' || input[i] == ')'
 		   || input[i] == '_' || input[i] == '-'
 		   || input[i] == '\'' || input[i] == '.') {
-			*ptr = input[i];
-			ptr ++;
+			tmp[0] = input[i];
+			tlen = 1;
 		} else {
-			sprintf(tmp, "%%%.02X", input[i]);
-			strcpy(ptr, tmp);
-			ptr += 3;
+			/* Cast to unsigned: with signed char, bytes >= 0x80
+			 * (e.g. UTF-8 SSIDs) were sign-extended and printed as
+			 * %FFFFFFxx by the old "%%%.02X" format. */
+			snprintf(tmp, sizeof(tmp), "%%%02X", (unsigned char)input[i]);
+			tlen = 3;
 		}
+
+		/* each input byte expands to at most 3 output bytes + NUL */
+		if (olen + tlen + 1 > osize)
+			break;
+
+		memcpy(output + olen, tmp, tlen);
+		olen += tlen;
 	}
-	*(ptr) = '\0';
+
+	output[olen] = '\0';
 }
 
 int
