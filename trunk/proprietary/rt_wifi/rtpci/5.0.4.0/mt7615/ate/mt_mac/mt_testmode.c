@@ -5167,7 +5167,7 @@ static INT32 MT_ATESetChannel(RTMP_ADAPTER *pAd,
 		break;
 
 	case CH_SWITCH_BY_NORMAL_TX_RX:
-	deafult:
+	default:
 		ch_cfg.bScan = FALSE;
 		ch_cfg.isMCC = FALSE;
 		break;
