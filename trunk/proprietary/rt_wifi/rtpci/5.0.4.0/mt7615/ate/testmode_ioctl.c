@@ -811,7 +811,7 @@ static INT32 HQA_SetChannel(
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
 	UINT32 Ret = 0;
-	UINT32 Value;
+	UINT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
@@ -893,7 +893,7 @@ static INT32 HQA_SetSystemBW(
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
 	INT32 Ret = 0;
-	UINT32 Value;
+	UINT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
@@ -914,7 +914,7 @@ static INT32 HQA_SetPerPktBW(
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
 	INT32 Ret = 0;
-	UINT32 Value;
+	UINT32 Value = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 
 	memcpy((PUCHAR)&Value, HqaCmdFrame->Data, 4);
@@ -987,7 +987,7 @@ static INT32 HQA_SetTssiOnOff(
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
 	INT32 Ret = 0;
-	INT32 Value = 0, WFSel;
+	INT32 Value = 0, WFSel = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
@@ -1858,7 +1858,7 @@ static INT32 HQA_CheckEfuseMode(
 {
 	INT32 Ret = 0;
 #if !defined(COMPOS_TESTMODE_WIN) /* 1Todo	eFuseGetFreeBlockCount */
-	UINT32 Value;
+	UINT32 Value = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 
@@ -1883,7 +1883,7 @@ static INT32 HQA_GetFreeEfuseBlock(
 	INT32 Ret = 0;
 #if !defined(COMPOS_TESTMODE_WIN) /* 1Todo	eFuseGetFreeBlockCount */
 	/* remove this block when command RSP function ready */
-	UINT32 Value;
+	UINT32 Value = 0;
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s\n", __func__));
 	eFuseGetFreeBlockCount(pAd, &Value);
@@ -1990,7 +1990,7 @@ static INT32 HQA_SetCfgOnOff(
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
 	INT32 Ret = 0;
-	INT32 Type, Enable, Band;
+	INT32 Type = 0, Enable = 0, Band = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
@@ -2108,7 +2108,7 @@ static INT32 HQA_DBDCContinuousTX(
 {
 	INT32 Ret = 0;
 	INT32 Band = 0, Control = 0, AntMask = 0, Phymode = 0, BW = 0;
-	INT32 Pri_Ch = 0, Rate = 0, Central_Ch = 0, TxfdMode;
+	INT32 Pri_Ch = 0, Rate = 0, Central_Ch = 0, TxfdMode = 0;
 	INT32 offset = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
@@ -2308,8 +2308,8 @@ static INT32 HQA_CA53RegRead(
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
 	INT32 ret = 0;
-	unsigned long offset;
-	UINT32 value;
+	unsigned long offset = 0;
+	UINT32 value = 0;
 
 	NdisMoveMemory((PUCHAR)&offset, (PUCHAR)&HqaCmdFrame->Data, sizeof(unsigned long));
 
@@ -2335,8 +2335,8 @@ static INT32 HQA_CA53RegWrite(
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
 	INT32 ret = 0;
-	unsigned long offset;
-	UINT32 value;
+	unsigned long offset = 0;
+	UINT32 value = 0;
 
 	NdisMoveMemory((PUCHAR)&offset, (PUCHAR)&HqaCmdFrame->Data, sizeof(unsigned long));
 	/* Shift 4 bytes only because dll cmd format */
@@ -2560,7 +2560,7 @@ static INT32 HQA_SetDPD(
 	struct _HQA_CMD_FRAME *HqaCmdFrame)
 {
 	INT32 Ret = 0;
-	INT32 Value = 0, WFSel;
+	INT32 Value = 0, WFSel = 0;
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 
