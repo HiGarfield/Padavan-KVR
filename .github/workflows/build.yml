@@ -126,18 +126,71 @@ jobs:
             printf '%s\n' "${supported_models[@]}" | grep -Fxq "$target"
           }
 
+          # 固件分区 >= 20M（20 MiB）的机型使用 high 配置。
+          # 固件分区大小直接取自仓库内各机型的板级内核配置
+          # trunk/configs/boards/<model>/kernel-3.4.x*.config，判定规则（均来自仓库，
+          # 不依赖外部闪存资料，避免按机型名误判）：
+          #   1) CONFIG_MTD_FIRMWARE_PART_SIZ >= 0x1400000（NAND / 大容量设备显式定义，
+          #      如 R3G/R6220/RT-AC85P 等）；
+          #   2) CONFIG_RT2880_FLASH_32M=y（32M SPI NOR 设备，固件分区约 30M >= 20M，
+          #      如 GHL / NEWIFI3 / NEWIFI-D1 / WDR7300 / XY-C1，它们无 FIRMWARE_PART_SIZ
+          #      变量，仅用 FLASH_32M 标注闪存大小）。
+          # 其余（16M/8M/4M SPI NOR，或 AUTO 且无法从配置确定大小时）回落到 plain
+          # 或各自专用 profile。
+          board_dir_for() {
+            local model="$1"
+            case "$model" in
+              JCG-Q20-breed|JCG-Q20-pb|JCG-Q20-uboot) echo "JCG-Q20" ;;
+              MI-R3P-breed) echo "MI-R3P" ;;
+              RT-AC85P-无插件) echo "RT-AC85P" ;;
+              *) echo "$model" ;;
+            esac
+          }
+
+          firmware_partition_ge_20m() {
+            local bd
+            bd="$(board_dir_for "$1")"
+            local dir="$GITHUB_WORKSPACE/trunk/configs/boards/$bd"
+            [ -d "$dir" ] || return 1
+            local cfg
+            if [ -f "$dir/kernel-3.4.x.config" ]; then
+              cfg="$dir/kernel-3.4.x.config"
+            else
+              cfg="$(ls "$dir"/kernel-3.4.x*.config 2>/dev/null | head -n1)"
+            fi
+            [ -n "$cfg" ] || return 1
+            # 1) NAND / 大容量设备显式定义了固件分区大小（0x1400000 = 20 MiB）
+            local hex
+            hex="$(grep -h '^CONFIG_MTD_FIRMWARE_PART_SIZ=' "$cfg" | head -n1 | cut -d= -f2)"
+            if [ -n "$hex" ] && [ "$((hex))" -ge "$((0x1400000))" ]; then
+              return 0
+            fi
+            # 2) SPI NOR 设备用 CONFIG_RT2880_FLASH_* 标注闪存大小；32M 闪存的
+            #    固件分区约为 32M 减去少量保留区，必 >= 20M（如 GHL / NEWIFI3 /
+            #    NEWIFI-D1 / WDR7300 / XY-C1 等，均无 FIRMWARE_PART_SIZ 变量）。
+            grep -hq '^CONFIG_RT2880_FLASH_32M=y$' "$cfg" && return 0
+            return 1
+          }
+
           resolve_profile() {
             local model="$1"
             case "$model" in
-              CR660x) echo "high" ;;
+              # 以下机型保持专用 profile（功能集经人工调校，不随固件分区规则改变）
               RT-AC85P) echo "rt_ac85p" ;;
               RT-AC85P-无插件) echo "none" ;;
-              NEWIFI3|MI-R3G|K2P-32-512-usb) echo "mid" ;;
               K2P|K2P-4) echo "lite" ;;
               MI-MINI) echo "mi_mini" ;;
               MI-NANO) echo "mi_nano" ;;
               NEWIFI-MINI) echo "newifi_mini" ;;
-              *) echo "plain" ;;
+              # 无独立板级目录、无法从仓库读取闪存大小的 32M 历史机型，保留中等功能集
+              K2P-32-512-usb) echo "mid" ;;
+              *)
+                if firmware_partition_ge_20m "$model"; then
+                  echo "high"
+                else
+                  echo "plain"
+                fi
+                ;;
             esac
           }
 
