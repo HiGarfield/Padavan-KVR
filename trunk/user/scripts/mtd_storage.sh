@@ -517,7 +517,7 @@ EOF
 EOF
 	fi
 
-	if [ -d $dir_gfwlist ]; then
+	if [ -n "$dir_gfwlist" ] && [ -d "$dir_gfwlist" ]; then
 		cat >> "$user_dnsmasq_conf" <<EOF
 ### gfwlist related (resolve by port 5353)
 #min-cache-ttl=3600
