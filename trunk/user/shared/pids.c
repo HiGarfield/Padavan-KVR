@@ -279,14 +279,17 @@ procps_status_t* procps_scan(procps_status_t* sp, int flags)
 			if (n < 0)
 				break;
 			cp = strrchr(buf, ')'); /* split into "PID (cmd" and "<rest>" */
-			/*if (!cp || cp[1] != ' ')
-				break;*/
+			if (!cp || cp[1] != ' ')
+				break;
 			cp[0] = '\0';
 			if (sizeof(sp->comm) < 16)
 				BUG_comm_size();
 			comm1 = strchr(buf, '(');
-			/*if (comm1)*/
-				strncpy(sp->comm, comm1 + 1, sizeof(sp->comm));
+			if (comm1) {
+				strncpy(sp->comm, comm1 + 1, sizeof(sp->comm) - 1);
+				sp->comm[sizeof(sp->comm) - 1] = '\0';
+			} else
+				sp->comm[0] = '\0';
 
 			n = sscanf(cp+2,
 				"%c %u "               /* state, ppid */
