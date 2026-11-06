@@ -59,7 +59,7 @@ caddy_close ()
 {
 	iptables -t filter -D INPUT -p tcp --dport $caddyf_wan_port -j ACCEPT
 	iptables -t filter -D INPUT -p tcp --dport $caddyw_wan_port -j ACCEPT
-	if [ "$wipv6" = 1 ]; then
+	if [ "$caddy_wip6" = 1 ]; then
 		ip6tables -t filter -D INPUT -p tcp --dport $caddyw_wan_port -j ACCEPT
 		ip6tables -t filter -D INPUT -p tcp --dport $caddyf_wan_port -j ACCEPT
 	fi
