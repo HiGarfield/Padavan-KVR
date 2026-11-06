@@ -217,12 +217,12 @@ INT rt28xx_ap_ioctl(struct net_device *net_dev, struct ifreq *rq, int cmd)
 #ifdef HOSTAPD_11R_SUPPORT
 	case RTPRIV_IOCTL_SET_FT_PARAM:
 		{
-			RT_CMD_AP_11R_PARAM ap_11r_params;
+			RT_CMD_AP_11R_PARAM ap_11r_params = { 0 };
 			struct iw_point *erq = &wrqin->u.data;
 
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("set ft param ioctl call: length:%d\n", erq->length));
-			if (erq->length <= 12) {
-				Status = 0;
+			if (erq->length <= 12 || erq->length > sizeof(RT_CMD_AP_11R_PARAM)) {
+				Status = -EINVAL;
 				MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("set ft param ioctl call failed due to length:%d\n", erq->length));
 			} else {
 				if (erq->pointer) {
