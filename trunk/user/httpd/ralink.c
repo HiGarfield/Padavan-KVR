@@ -71,7 +71,7 @@ ej_lan_leases(int eid, webs_t wp, int argc, char **argv)
 		return ret;
 
 	while (fgets(buff, sizeof(buff), fp)) {
-		if (sscanf(buff, "%31s %63s %63s %63s %*s", dh_lease, dh_mac, dh_ip, dh_host) != 4)
+		if (sscanf(buff, "%26s %63s %63s %63s %*s", dh_lease, dh_mac, dh_ip, dh_host) != 4)
 			continue;
 		
 		if (strcmp(dh_lease, "duid") == 0)
@@ -108,7 +108,7 @@ ej_lan_leases(int eid, webs_t wp, int argc, char **argv)
 	fp = fopen("/tmp/dnsmasq.leases", "r");
 	if (fp) {
 		while (fgets(buff, sizeof(buff), fp)) {
-			if (sscanf(buff, "%31s %63s %63s %63s %*s", dh_lease, dh_mac, dh_ip, dh_host) != 4)
+			if (sscanf(buff, "%26s %63s %63s %63s %*s", dh_lease, dh_mac, dh_ip, dh_host) != 4)
 				continue;
 			
 			if (strcmp(dh_lease, "duid") == 0)
