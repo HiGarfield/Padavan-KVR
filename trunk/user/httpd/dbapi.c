@@ -272,6 +272,9 @@ static int parse_list_result(dbclient *client, char* prefix, webs_t wp, fn_db_pa
             return n1;
         }
 
+        if(n2 < LIST_LEN)
+            continue;
+
         client->buf[n2] = '\0';
 
         if(NULL != strstr(client->buf, "__end__")) {
@@ -280,6 +283,8 @@ static int parse_list_result(dbclient *client, char* prefix, webs_t wp, fn_db_pa
 
         p1 = client->buf + LIST_LEN;
         p2 = strstr(p1, " ");
+        if(NULL == p2)
+            continue;
         *p2 = '\0';
         p2++;
         if(client->buf[n2-1] == '\n') {
