@@ -181,6 +181,9 @@ static void set_rate_limit(esw_rate *ratelimit, int is_egress)
 	u32 offset;
 	u32 value = 0;
 
+	if (ratelimit->port > ESW_PORT_ID_MAX)
+		return;
+
 #if defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_MT7628)
 	offset = (is_egress) ? 0x140 : 0x11c;
 	offset += (4 * (ratelimit->port / 2));
