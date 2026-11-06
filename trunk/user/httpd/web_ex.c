@@ -3606,29 +3606,30 @@ int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv) {
 		return 0;
 	}
 
-	for (i = 0; i <= MAX_DICT_LANGS; ++i) {
+	for (i = 0; i < MAX_DICT_LANGS; ++i) {
 		follow_info = fgets(buffer, sizeof(buffer), fp);
 		if (!follow_info)
 			break;
-		
+
 		if (strncmp(follow_info, "LANG_", 5))    // 5 = strlen("LANG_")
 			continue;
-		
+
 		follow_info += 5;
-		follow_info_end = strstr(follow_info, "=");
-		len = follow_info_end-follow_info;
+		follow_info_end = strchr(follow_info, '=');
+		if (!follow_info_end)
+			continue;
+		len = (int)(follow_info_end - follow_info);
 		if (len < 1 || len >= sizeof(key))
 			continue;
-		
+
 		strncpy(key, follow_info, len);
 		key[len] = 0;
-		
-		follow_info = follow_info_end+1;
-		follow_info_end = strstr(follow_info, "\n");
-		len = follow_info_end-follow_info;
+
+		follow_info = follow_info_end + 1;
+		len = (int)strcspn(follow_info, "\n");
 		if (len < 1)
 			continue;
-		
+
 		if (len >= sizeof(target))
 			len = sizeof(target) - 1;
 		strncpy(target, follow_info, len);
