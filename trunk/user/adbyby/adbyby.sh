@@ -365,7 +365,7 @@ fi
 done
 rm -f /tmp/host.txt
 logger -t "adbyby" "正在对hosts文件进行去重处理."
-sort $PROG_PATH/hosts | uniq
+sort -u "$PROG_PATH/hosts" > /tmp/host.txt && mv /tmp/host.txt "$PROG_PATH/hosts"
 nvram set adbyby_hostsad=`grep -v '^!' $PROG_PATH/hosts | wc -l`
 sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
 cat >> /etc/storage/dnsmasq/dnsmasq.conf <<-EOF
