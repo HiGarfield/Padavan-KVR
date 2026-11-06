@@ -83,8 +83,13 @@ static int create_client_fd(char* sock_path) {
     return remote_fd;
 }
 
-static void check_buf(dbclient* client, int len) {
-    int clen = _max(len, BUF_MAX);
+static int check_buf(dbclient* client, int len) {
+    int clen;
+
+    if (len < 0 || len > READ_MAX)
+        return -1;
+
+    clen = _max(len, BUF_MAX);
 
     if((NULL != client->buf) && (client->buf_max < clen)) {
         free(client->buf);
@@ -93,8 +98,14 @@ static void check_buf(dbclient* client, int len) {
 
     if(NULL == client->buf) {
         client->buf = (char*)malloc(clen+1);
+        if(NULL == client->buf) {
+            client->buf_max = 0;
+            return -1;
+        }
         client->buf_max = clen;
     }
+
+    return 0;
 }
 
 static int setnonblock(int fd) {
@@ -153,7 +164,8 @@ int dbclient_bulk(dbclient* client, const char* command, const char* key, int nk
     }
 
     n1 = nc + nk + nv + 3;// replace key value\n
-    check_buf(client, n1 + HEADER_PREFIX);
+    if (check_buf(client, n1 + HEADER_PREFIX) != 0)
+        return -1;
     n2 = sprintf(client->buf, "%s%07d %s ", MAGIC, n1, command);
 
     memcpy(client->buf + n2, key, nk);
@@ -179,7 +191,8 @@ static int read_util(dbclient* client, int len, unsigned int delay) {
     unsigned int now, timeout;
     struct timeval tv,  tv2;
 
-    check_buf(client, len);
+    if (check_buf(client, len) != 0)
+        return -1;
     gettimeofday(&tv2, NULL);
     timeout = (tv2.tv_sec * 1000) + (tv2.tv_usec / 1000) + delay;
     client->buf_pos = 0;
@@ -302,7 +315,8 @@ int dbclient_list(dbclient* client, char* prefix, webs_t wp, fn_db_parse fn) {
     int n1, n2;
 
     n1 = strlen("list") + strlen(prefix) + 2;//list prefix\n
-    check_buf(client, n1 + HEADER_PREFIX);
+    if (check_buf(client, n1 + HEADER_PREFIX) != 0)
+        return -1;
     n2 = sprintf(client->buf, "%s%07d list %s\n", MAGIC, n1, prefix);
     if(0 != write_util(client, n1 + HEADER_PREFIX, 100)) {
         return -1;
