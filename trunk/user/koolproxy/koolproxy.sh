@@ -659,7 +659,7 @@ logger -t "【iptables】" "添加 ipset 转发规则"
 sed -Ei '/adbyby_host.conf|cflist.conf/d' /etc/storage/dnsmasq/dnsmasq.conf
 sed  "s/\/black_koolproxy/\/adbybylist/" -i  /tmp/adbyby_host.conf
 adbyby_whitehost=`nvram get adbyby_whitehost`
-[ ! -z $whitehost ] && sed -Ei "/$(echo $whitehost | tr , \|)/d" /tmp/adbyby_host.conf
+[ -n "$adbyby_whitehost" ] && sed -Ei "/$(echo "$adbyby_whitehost" | tr , '|')/d" /tmp/adbyby_host.conf
 [ -f "$confdir$gfwlist" ] && gfw_black=$(grep "/$gfw_black_list" "$confdir$gfwlist" | sed 's/.*\=//g')
 if [ -s "$confdir$gfwlist" ] && [ -s /tmp/adbyby_host.conf ] && [ ! -z "$gfw_black" ] ; then
 	logger -t "【iptables】" "koolproxylist 规则处理开始"
