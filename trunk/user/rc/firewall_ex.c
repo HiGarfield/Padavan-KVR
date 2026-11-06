@@ -305,7 +305,7 @@ iprange_ex_conv(const char *ip_name, int idx)
 	i=j=k=0;
 	mask=32;
 
-	while (*(ip+i)) {
+	while (*(ip+i) && j < (int)sizeof(startip) - 1) {
 		if (*(ip+i)=='*') {
 			startip[j++] = '0';
 			endip[k++] = '0';
@@ -320,6 +320,9 @@ iprange_ex_conv(const char *ip_name, int idx)
 
 	startip[j++] = 0;
 	endip[k++] = 0;
+
+	if (mask < 0)
+		mask = 0;
 
 	if (mask==32)
 		sprintf(g_buf, "%s", startip);
