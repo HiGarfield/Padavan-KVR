@@ -22,8 +22,8 @@ check_net()
 	if [ "$?" == "0" ]; then
 		return 1
 	else
-		return 2
 		logger -t "npc" "检测到互联网未能成功访问,稍后再尝试启动npc"
+		return 2
 	fi
 }
 
