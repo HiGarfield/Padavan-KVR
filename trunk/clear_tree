@@ -16,8 +16,8 @@ rm -rf $ROOTDIR/romfs
 rm -rf $ROOTDIR/images
 rm -rf $ROOTDIR/stage
 
-. $ROOTDIR/.config
-if [ -d $ROOTDIR/merge/$CONFIG_FIRMWARE_PRODUCT_ID ]; then
-	rm -rf $ROOTDIR/merge/$CONFIG_FIRMWARE_PRODUCT_ID
+. "$ROOTDIR/.config"
+if [ -n "$CONFIG_FIRMWARE_PRODUCT_ID" ] && [ -d "$ROOTDIR/merge/$CONFIG_FIRMWARE_PRODUCT_ID" ]; then
+	rm -rf "$ROOTDIR/merge/$CONFIG_FIRMWARE_PRODUCT_ID"
 fi
 
