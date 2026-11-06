@@ -13495,6 +13495,9 @@ INT set_manual_protect(RTMP_ADAPTER *pAd, RTMP_STRING *arg)
 		token = strsep(&arg, "-");
 		wdev_idx = os_str_tol(token, 0, 10);
 
+		if (wdev_idx >= WDEV_NUM_MAX)
+			goto err2;
+
 		if (pAd->wdev_list[wdev_idx] == NULL)
 			goto err2;
 	}
