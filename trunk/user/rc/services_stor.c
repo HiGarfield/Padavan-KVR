@@ -203,7 +203,7 @@ check_existed_share(const char *string)
 		return 0;
 	}
 
-	sprintf(target, "[%s]", string);
+	snprintf(target, sizeof(target), "[%s]", string);
 
 	while(fgets(buf, sizeof(buf), tp) != NULL){
 		if(strstr(buf, target)){
@@ -350,18 +350,18 @@ write_smb_conf(void)
 					int guest_right = get_permission(SMB_GUEST_USER, follow_partition->mount_point, folder_list[n], "cifs");
 
 					memset(share, 0, 256);
-					strcpy(share, folder_list[n]);
+					snprintf(share, sizeof(share), "%s", folder_list[n]);
 					
 					fclose(fp);
 					
 					if(check_existed_share(share)){
 						i = 1;
 						memset(share, 0, 256);
-						sprintf(share, "%s(%d)", folder_list[n], i);
+						snprintf(share, sizeof(share), "%s(%d)", folder_list[n], i);
 						while(check_existed_share(share)){
 							++i;
 							memset(share, 0, 256);
-							sprintf(share, "%s(%d)", folder_list[n], i);
+							snprintf(share, sizeof(share), "%s(%d)", folder_list[n], i);
 						}
 					}
 					
@@ -762,7 +762,7 @@ int create_mp_link(char *search_dir, char *link_path, int force_first_valid)
 				continue;
 
 			if (strncmp(mpname, "/media/", 7) == 0) {
-				sprintf(target_path, "%s/%s", mpname, search_dir);
+				snprintf(target_path, sizeof(target_path), "%s/%s", mpname, search_dir);
 				if (!force_first_valid) {
 					if (check_if_dir_exist(target_path)) {
 						if (symlink(target_path, link_path) == 0) {
