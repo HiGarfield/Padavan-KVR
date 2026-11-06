@@ -35,6 +35,7 @@ sdnse_ipc=`nvram get sdnse_ipc`
 sdnse_cache=`nvram get sdnse_cache`
 ss_white=`nvram get ss_white`
 ss_black=`nvram get ss_black`
+sdns_coredump=`nvram get sdns_coredump`
 
 check_ss(){
 if [ $(nvram get ss_enable) = 1 ] && [ $(nvram get ss_run_mode) = "router" ] && [ $(nvram get pdnsd_enable) = 0 ]; then
