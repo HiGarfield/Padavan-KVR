@@ -262,35 +262,44 @@ int raeth_ioctl(struct ifreq *ifr, int cmd)
 
 	switch (cmd) {
 		case RAETH_MII_READ:
-			copy_from_user(&mii, ifr->ifr_data, sizeof(mii));
+			if (copy_from_user(&mii, ifr->ifr_data, sizeof(mii)))
+				return -EFAULT;
 			mii_mgr_read(mii.phy_id, mii.reg_num, &mii.val_out);
-			copy_to_user(ifr->ifr_data, &mii, sizeof(mii));
+			if (copy_to_user(ifr->ifr_data, &mii, sizeof(mii)))
+				return -EFAULT;
 			break;
 		case RAETH_MII_WRITE:
-			copy_from_user(&mii, ifr->ifr_data, sizeof(mii));
+			if (copy_from_user(&mii, ifr->ifr_data, sizeof(mii)))
+				return -EFAULT;
 			mii_mgr_write(mii.phy_id, mii.reg_num, mii.val_in);
 			break;
 #if defined (CONFIG_RALINK_MT7620) || defined (CONFIG_RALINK_MT7621) || defined (CONFIG_RALINK_MT7628)
 		case RAETH_MII_READ_CL45:
-			copy_from_user(&mii, ifr->ifr_data, sizeof(mii));
+			if (copy_from_user(&mii, ifr->ifr_data, sizeof(mii)))
+				return -EFAULT;
 			mii_mgr_read_cl45(mii.port_num, mii.dev_addr, mii.reg_addr, &mii.val_out);
-			copy_to_user(ifr->ifr_data, &mii, sizeof(mii));
+			if (copy_to_user(ifr->ifr_data, &mii, sizeof(mii)))
+				return -EFAULT;
 			break;
 		case RAETH_MII_WRITE_CL45:
-			copy_from_user(&mii, ifr->ifr_data, sizeof(mii));
+			if (copy_from_user(&mii, ifr->ifr_data, sizeof(mii)))
+				return -EFAULT;
 			mii_mgr_write_cl45(mii.port_num, mii.dev_addr, mii.reg_addr, mii.val_in);
 			break;
 #endif
 #if defined (CONFIG_RAETH_ESW)
 		case RAETH_ESW_REG_READ:
-			copy_from_user(&reg, ifr->ifr_data, sizeof(reg));
+			if (copy_from_user(&reg, ifr->ifr_data, sizeof(reg)))
+				return -EFAULT;
 			if (reg.off > REG_ESW_MAX)
 				return -EINVAL;
 			reg.val = sysRegRead(RALINK_ETH_SW_BASE + reg.off);
-			copy_to_user(ifr->ifr_data, &reg, sizeof(reg));
+			if (copy_to_user(ifr->ifr_data, &reg, sizeof(reg)))
+				return -EFAULT;
 			break;
 		case RAETH_ESW_REG_WRITE:
-			copy_from_user(&reg, ifr->ifr_data, sizeof(reg));
+			if (copy_from_user(&reg, ifr->ifr_data, sizeof(reg)))
+				return -EFAULT;
 			if (reg.off > REG_ESW_MAX)
 				return -EINVAL;
 			sysRegWrite(RALINK_ETH_SW_BASE + reg.off, reg.val);
@@ -298,34 +307,41 @@ int raeth_ioctl(struct ifreq *ifr, int cmd)
 #endif
 #if defined (CONFIG_RAETH_ESW) || defined (CONFIG_MT7530_GSW)
 		case RAETH_ESW_PHY_DUMP:
-			copy_from_user(&reg, ifr->ifr_data, sizeof(reg));
+			if (copy_from_user(&reg, ifr->ifr_data, sizeof(reg)))
+				return -EFAULT;
 			dump_phy(reg.val);
 			break;
 		case RAETH_ESW_INGRESS_RATE:
-			copy_from_user(&ratelimit, ifr->ifr_data, sizeof(ratelimit));
+			if (copy_from_user(&ratelimit, ifr->ifr_data, sizeof(ratelimit)))
+				return -EFAULT;
 			set_rate_limit(&ratelimit, 0);
 			break;
 		case RAETH_ESW_EGRESS_RATE:
-			copy_from_user(&ratelimit, ifr->ifr_data, sizeof(ratelimit));
+			if (copy_from_user(&ratelimit, ifr->ifr_data, sizeof(ratelimit)))
+				return -EFAULT;
 			set_rate_limit(&ratelimit, 1);
 			break;
 #endif
 #if defined (CONFIG_RAETH_QDMA)
 		case RAETH_QDMA_REG_READ:
-			copy_from_user(&reg, ifr->ifr_data, sizeof(reg));
+			if (copy_from_user(&reg, ifr->ifr_data, sizeof(reg)))
+				return -EFAULT;
 			if (reg.off > REG_HQOS_MAX)
 				return -EINVAL;
 			reg.val = sysRegRead(RALINK_FRAME_ENGINE_BASE + QDMA_RELATED + reg.off);
-			copy_to_user(ifr->ifr_data, &reg, sizeof(reg));
+			if (copy_to_user(ifr->ifr_data, &reg, sizeof(reg)))
+				return -EFAULT;
 			break;
 		case RAETH_QDMA_REG_WRITE:
-			copy_from_user(&reg, ifr->ifr_data, sizeof(reg));
+			if (copy_from_user(&reg, ifr->ifr_data, sizeof(reg)))
+				return -EFAULT;
 			if (reg.off > REG_HQOS_MAX)
 				return -EINVAL;
 			sysRegWrite(RALINK_FRAME_ENGINE_BASE + QDMA_RELATED + reg.off, reg.val);
 			break;
 		case RAETH_QDMA_QUEUE_MAPPING:
-			copy_from_user(&reg, ifr->ifr_data, sizeof(reg));
+			if (copy_from_user(&reg, ifr->ifr_data, sizeof(reg)))
+				return -EFAULT;
 			if (reg.val > 0x0f)
 				return -EINVAL;
 			if (reg.off & 0x100)
