@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Github: https://github.com/SuzukiHonoka
 # Made by starx.
 

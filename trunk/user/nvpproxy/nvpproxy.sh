@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 nvpproxy_enable=`nvram get nvpproxy_enable`
 vpnproxy_wan_port=`nvram get nvpproxy_wan_port`
 vpnproxy_vpn_port=`nvram get nvpproxy_vpn_port`
