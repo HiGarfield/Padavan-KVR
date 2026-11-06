@@ -251,10 +251,14 @@ INT	Set_SecWPAPSK_Proc(
 #endif /* APCLI_SUPPORT */
 
 		if (pWscControl) {
-			NdisZeroMemory(pWscControl->WpaPsk, 64);
+			INT psk_len = (INT)strlen(arg);
+
+			NdisZeroMemory(pWscControl->WpaPsk, sizeof(pWscControl->WpaPsk));
 			pWscControl->WpaPskLen = 0;
-			pWscControl->WpaPskLen = strlen(arg);
-			NdisMoveMemory(pWscControl->WpaPsk, arg, pWscControl->WpaPskLen);
+			if (psk_len > (INT)sizeof(pWscControl->WpaPsk))
+				psk_len = (INT)sizeof(pWscControl->WpaPsk);
+			pWscControl->WpaPskLen = psk_len;
+			NdisMoveMemory(pWscControl->WpaPsk, arg, psk_len);
 		}
 	}
 #endif /* WSC_AP_SUPPORT */
