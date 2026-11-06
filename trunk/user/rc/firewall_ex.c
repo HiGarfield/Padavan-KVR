@@ -75,20 +75,26 @@ proto_conv(const char *proto_name, int idx)
 {
 	char *proto;
 	char itemname_arr[32];
+	size_t avail;
 
 	snprintf(itemname_arr, sizeof(itemname_arr), "%s%d", proto_name, idx);
 	proto = nvram_safe_get(itemname_arr);
 
+	avail = g_buf_avail();
+	if (avail == 0)
+		return g_buf;
+	g_buf[0] = '\0';
+
 	if (!strncasecmp(proto, "Both", 4))
-		strcpy(g_buf, "both");
+		snprintf(g_buf, avail, "both");
 	else if (!strncasecmp(proto, "TCP", 3))
-		strcpy(g_buf, "tcp");
+		snprintf(g_buf, avail, "tcp");
 	else if (!strncasecmp(proto, "UDP", 3))
-		strcpy(g_buf, "udp");
+		snprintf(g_buf, avail, "udp");
 	else if (!strncasecmp(proto, "OTHER", 5))
-		strcpy(g_buf, "other");
+		snprintf(g_buf, avail, "other");
 	else
-		strcpy(g_buf, "tcp");
+		snprintf(g_buf, avail, "tcp");
 
 	return (g_buf_alloc(g_buf));
 }
