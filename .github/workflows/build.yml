@@ -254,9 +254,9 @@ jobs:
             while [ "$attempt" -le "$max_attempts" ]; do
               if timeout --signal=TERM --kill-after="$kill_after" "$timeout_limit" "${cmd[@]}"; then
                 return 0
+              else
+                status=$?
               fi
-
-              status=$?
               if [ "$status" -ne 124 ] && [ "$status" -ne 137 ]; then
                 return "$status"
               fi
