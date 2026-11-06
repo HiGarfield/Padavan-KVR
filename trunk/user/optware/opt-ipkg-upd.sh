@@ -19,9 +19,10 @@ if [ ! -f /opt/bin/ipkg ] ; then
 		ipkg.sh -force-defaults install ipkg-opt
 		if [ $? -eq 0 ] ; then
 			logger -t "${self_name}" "SUCCESS!"
+		else
+			logger -t "${self_name}" "FAILED!"
 		fi
-	fi
-	if [ $? -ne 0 ] ; then
+	else
 		logger -t "${self_name}" "FAILED!"
 	fi
 fi
