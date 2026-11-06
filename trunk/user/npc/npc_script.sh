@@ -44,7 +44,7 @@ if [ "$npc_enable" = "1" ] ; then
 			if [ ! -f "/tmp/npc/npc" ]; then
 				logger -t "NPC" "npc二进制文件下载失败，可能是地址失效或者网络异常！"
 				nvram set npc_enable=0
-				npc_close
+				exit 1
 			else
 				logger -t "NPC" "npc二进制文件下载成功"
 				chmod -R 777 /tmp/npc/npc
