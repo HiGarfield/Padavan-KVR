@@ -45,7 +45,9 @@ static int write_util(dbclient* client, int len, unsigned int delay) {
                 }
 
                 usleep(50);
+                continue;
             }
+            break;
         }
 
         writed_len += n;
