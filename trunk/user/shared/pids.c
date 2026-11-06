@@ -343,13 +343,17 @@ procps_status_t* procps_scan(procps_status_t* sp, int flags)
 			if (n <= 0)
 				break;
 			if (flags & PSSCAN_ARGVN) {
-				sp->argv_len = n;
 				sp->argv0 = malloc(n + 1);
+				if (!sp->argv0)
+					break;
+				sp->argv_len = n;
 				memcpy(sp->argv0, buf, n + 1);
 				/* sp->argv0[n] = '\0'; - buf has it */
 			} else {
-				sp->argv_len = 0;
 				sp->argv0 = strdup(buf);
+				if (!sp->argv0)
+					break;
+				sp->argv_len = 0;
 			}
 		}
 		break;
