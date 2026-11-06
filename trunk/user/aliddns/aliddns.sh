@@ -487,7 +487,7 @@ else
 arIpAddress=$(arIpAddress)
 fi
 EEE
-	chmod 755 "$ddns_script"
+	chmod 755 "/etc/storage/ddns_script.sh"
 fi
 
 }
