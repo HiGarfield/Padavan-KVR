@@ -291,7 +291,7 @@ void start_sit_tunnel(int ipv6_type, char *wan_ifname, char *wan_addr4, char *wa
 
 	/* WAN IPv6 gateway (auto-generate for 6to4/6rd) */
 	if (ipv6_type == IPV6_6TO4 || ipv6_type == IPV6_6RD) {
-		sprintf(addr6s, "::%s", sit_relay);
+		snprintf(addr6s, sizeof(addr6s), "::%s", sit_relay);
 		wan_gate6 = addr6s;
 		/* add direct default gateway for workaround "No route to host" on new kernel */
 		doSystem("ip -6 route add default dev %s metric %d", IFNAME_SIT, 2048);
