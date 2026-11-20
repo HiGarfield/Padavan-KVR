@@ -1430,9 +1430,16 @@ gen_ralink_config(int is_soc_ap, int is_aband, int disable_autoscan)
 		
 		sprintf(wlan_param, "%s_%s", prefix, "maclist_x");
 		i_num = nvram_wlan_get_int(is_aband, "macnum_x");
-		for (i = 0; i < i_num; i++)
-			sprintf(list+strlen(list), "%s;", mac_conv(wlan_param, i, macbuf));
-		if (i_num > 0)
+		for (i = 0; i < i_num; i++) {
+			size_t used = strlen(list);
+			int n = snprintf(list + used, sizeof(list) - used, "%s;",
+				mac_conv(wlan_param, i, macbuf));
+			if (n < 0 || (size_t)n >= sizeof(list) - used) {
+				list[used] = '\0';
+				break;
+			}
+		}
+		if (strlen(list) > 0)
 			list[strlen(list) - 1] = '\0';
 	}
 
@@ -1506,9 +1513,16 @@ gen_ralink_config(int is_soc_ap, int is_aband, int disable_autoscan)
 		
 		sprintf(wlan_param, "%s_%s", prefix, "wdslist_x");
 		i_num = nvram_wlan_get_int(is_aband, "wdsnum_x");
-		for (i = 0; i < i_num; i++)
-			sprintf(list+strlen(list), "%s;", mac_conv(wlan_param, i, macbuf));
-		if (i_num > 0)
+		for (i = 0; i < i_num; i++) {
+			size_t used = strlen(list);
+			int n = snprintf(list + used, sizeof(list) - used, "%s;",
+				mac_conv(wlan_param, i, macbuf));
+			if (n < 0 || (size_t)n >= sizeof(list) - used) {
+				list[used] = '\0';
+				break;
+			}
+		}
+		if (strlen(list) > 0)
 			list[strlen(list) - 1] = '\0';
 	}
 	fprintf(fp, "WdsList=%s\n", list);
