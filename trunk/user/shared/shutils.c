@@ -649,7 +649,7 @@ logmessage(char *logheader, char *fmt, ...)
 	va_start(args, fmt);
 	vsnprintf(buf, sizeof(buf), fmt, args);
 	openlog(logheader, 0, 0);
-	syslog(0, buf);
+	syslog(0, "%s", buf);
 	closelog();
 	va_end(args);
 }
