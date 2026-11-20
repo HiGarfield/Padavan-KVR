@@ -796,12 +796,9 @@ set_preferred_lang(char *cur)
 	memset(lang_buf, 0, sizeof(lang_buf));
 	strncpy(lang_buf, cur, sizeof(lang_buf)-1);
 
-	p = lang_buf;
+	p = strtok(lang_buf, "\r\n ,;");
 	p_lang = NULL;
 	while (p != NULL) {
-		p = strtok (p, "\r\n ,;");
-		if (p == NULL)
-			break;
 		
 		for (p_lt = language_tables; p_lt->Lang != NULL; ++p_lt) {
 			if (strcasecmp(p, p_lt->Lang)==0) {
@@ -813,7 +810,7 @@ set_preferred_lang(char *cur)
 		if (p_lang)
 			break;
 		
-		p+=strlen(p)+1;
+		p = strtok(NULL, "\r\n ,;");
 	}
 
 	if (p_lang) {
