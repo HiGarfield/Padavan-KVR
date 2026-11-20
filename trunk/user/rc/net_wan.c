@@ -2015,7 +2015,7 @@ get_wan_ifname(char wan_ifname[16])
 		}
 	}
 
-	strcpy(wan_ifname, ifname);
+	snprintf(wan_ifname, IFNAMSIZ, "%s", ifname);
 }
 
 in_addr_t
