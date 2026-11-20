@@ -32,11 +32,16 @@ void
 unescape(char *s)
 {
 	unsigned int c;
+	int n;
 
 	while ((s = strpbrk(s, "%+"))) {
 		/* Parse %xx */
 		if (*s == '%') {
-			sscanf(s + 1, "%02x", &c);
+			n = 0;
+			if (sscanf(s + 1, "%2x%n", &c, &n) != 1 || n != 2) {
+				s++;
+				continue;
+			}
 			*s++ = (char) c;
 			memmove(s, s + 2, strlen(s + 2) + 1);
 		}
