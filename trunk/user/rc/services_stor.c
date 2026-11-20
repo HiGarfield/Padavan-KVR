@@ -221,6 +221,8 @@ write_smb_conf(void)
 {
 	FILE *fp;
 	int i_maxuser, i_smb_mode;
+	int acc_num = 0, sh_num = 0;
+	char **account_list = NULL, **folder_list = NULL;
 	disk_info_t *follow_disk, *disks_info = NULL;
 	partition_info_t *follow_partition;
 
@@ -324,8 +326,7 @@ write_smb_conf(void)
 		fprintf(fp, "map system = no\n");
 		fprintf(fp, "store dos attributes = yes\n\n");
 	} else {
-		int n, acc_num = 0, sh_num=0;
-		char **account_list;
+		int n;
 		
 		// get the account list
 		if (get_account_list(&acc_num, &account_list) < 0) {
@@ -338,7 +339,6 @@ write_smb_conf(void)
 				if (follow_partition->mount_point == NULL)
 					continue;
 				
-				char **folder_list;
 				
 				// 1. get the folder list
 				if (get_folder_list_in_mount_path(follow_partition->mount_point, &sh_num, &folder_list) < 0) {
@@ -357,6 +357,7 @@ write_smb_conf(void)
 					snprintf(share, sizeof(share), "%s", folder_list[n]);
 					
 					fclose(fp);
+					fp = NULL;
 					
 					if(check_existed_share(share)){
 						i = 1;
@@ -460,7 +461,10 @@ write_smb_conf(void)
 	}
 
 confpage:
-	fclose(fp);
+	if (fp)
+		fclose(fp);
+	free_2_dimension_list(&sh_num, &folder_list);
+	free_2_dimension_list(&acc_num, &account_list);
 	free_disk_data(disks_info);
 	return 0;
 }
