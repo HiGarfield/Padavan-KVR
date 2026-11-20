@@ -4121,20 +4121,20 @@ static void do_html_post_and_get(char *url, FILE *stream, int len, char *boundar
 		while (len--)
 			(void)fgetc(stream);
 	}
-	sprintf(post_json_buf, "%s", post_buf);
+	snprintf(post_json_buf, sizeof(post_json_buf), "%s", post_buf);
 
 	query = url;
 	query = strsep(&query, "?");
 
 	if (query && strlen(query) > 0){
 		if (strlen(post_buf) > 0)
-			sprintf(post_buf_backup, "?%s&%s", post_buf, query);
+			snprintf(post_buf_backup, sizeof(post_buf_backup), "?%s&%s", post_buf, query);
 		else
-			sprintf(post_buf_backup, "?%s", query);
-		sprintf(post_buf, "%s", post_buf_backup+1);
+			snprintf(post_buf_backup, sizeof(post_buf_backup), "?%s", query);
+		snprintf(post_buf, sizeof(post_buf), "%s", post_buf_backup+1);
 	}
 	else if (strlen(post_buf) > 0)
-		sprintf(post_buf_backup, "?%s", post_buf);
+		snprintf(post_buf_backup, sizeof(post_buf_backup), "?%s", post_buf);
 	//websScan(post_buf_backup);
 	init_cgi(post_buf);
 }
