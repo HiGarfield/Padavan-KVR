@@ -520,6 +520,7 @@ load_user_config(FILE *fp, const char *dir_name, const char *file_name, const ch
 {
 	FILE *fp_user;
 	char line[256], real_path[128];
+	size_t len;
 
 	snprintf(real_path, sizeof(real_path), "%s/%s", dir_name, file_name);
 	fp_user = fopen(real_path, "r");
@@ -535,8 +536,10 @@ load_user_config(FILE *fp, const char *dir_name, const char *file_name, const ch
 			if (forbid_list && is_param_forbidden(line, forbid_list))
 				continue;
 			
-			line[strlen(line) - 1] = '\n';
-			fprintf(fp, line);
+			len = strlen(line);
+			fprintf(fp, "%s", line);
+			if (len > 0 && line[len - 1] != '\n')
+				fputc('\n', fp);
 		}
 		
 		fclose(fp_user);
