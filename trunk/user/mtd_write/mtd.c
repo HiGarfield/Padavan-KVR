@@ -62,7 +62,7 @@ mtd_open(const char *mtd, int flags, struct mtd_info_user *p_mi)
 	if ((fp = fopen("/proc/mtd", "r"))) {
 		fgets(line, sizeof(line), fp); //skip the 1st line
 		while (fgets(line, sizeof(line), fp)) {
-			if (sscanf(line, "mtd%d: %*s %*s \"%s\"", &i, bnm) > 1) {
+			if (sscanf(line, "mtd%d: %*s %*s \"%63s\"", &i, bnm) > 1) {
 				/* strip tailed " character, if present. */
 				if ((p = strchr(bnm, '"')) != NULL)
 					*p = '\0';
