@@ -3271,20 +3271,26 @@ static int ej_get_static_client(int eid, webs_t wp, int argc, char **argv)
 	fp = fopen("/tmp/static_ip.inf", "r");
 	if (fp) {
 		while (fgets(buf, sizeof(buf), fp)) {
+			len = strlen(buf);
+			if (len == 0)
+				continue;
+			
 			if (first_client)
 				first_client = 0;
 			else
 				websWrite(wp, ", ");
 			
-			len = strlen(buf);
 			buf[len-1] = ',';
 			head = buf;
 			first_field = 1;
 			for (i = 0; i < 6; ++i) {
 				tail = strchr(head, ',');
+				memset(field, 0, sizeof(field));
 				if (tail != NULL) {
-					memset(field, 0, sizeof(field));
-					strncpy(field, head, (tail-head));
+					size_t field_len = (size_t)(tail - head);
+					if (field_len > sizeof(field) - 1)
+						field_len = sizeof(field) - 1;
+					memcpy(field, head, field_len);
 				}
 				
 				if (first_field) {
@@ -3298,7 +3304,10 @@ static int ej_get_static_client(int eid, webs_t wp, int argc, char **argv)
 				else
 					websWrite(wp, "null");
 				
-				head = tail+1;
+				if (tail != NULL)
+					head = tail + 1;
+				else
+					head += strlen(head);
 				
 				if (i == 5)
 					websWrite(wp, "]");
