@@ -22,6 +22,7 @@
 #include <ctype.h>
 #include <stdint.h>
 #include <errno.h>
+#include <limits.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/mman.h>
@@ -70,6 +71,10 @@ check_header_nvram(const char *buf, long *file_len)
 	}
 
 	if (strncmp(buf, PROFILE_HEADER, 4) == 0) {
+		if (*p_len > INT_MAX) {
+			httpd_log("%s: Incorrect %s header!", "NVRAM restore", "profile");
+			return -1;
+		}
 		*file_len = (long)(*p_len);
 		return 0;
 	}
@@ -249,7 +254,9 @@ do_upload_file(FILE *stream, int clen, char *bndr, const char *fn, const char *o
 			
 			if (func_hdr(ptr, &filelen) != 0)
 				goto err;
-			
+			if (filelen < 0)
+				goto err;
+
 			valid_header = 1;
 		}
 		
