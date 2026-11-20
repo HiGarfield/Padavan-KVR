@@ -401,7 +401,7 @@ int main (int argc, char **argv)
 	int ch, i, do_reboot, unlocked, image_fd;
 	off_t image_ofs, image_len;
 	size_t part_ofs;
-	char *erase[MAX_ARGS], *device, *image_file;
+	char *erase[MAX_ARGS + 1], *device, *image_file;
 	enum {
 		CMD_ERASE,
 		CMD_WRITE,
@@ -437,9 +437,11 @@ int main (int argc, char **argv)
 				break;
 			case 'e':
 				i = 0;
-				while ((erase[i] != NULL) && ((i + 1) < MAX_ARGS))
+				while ((i < MAX_ARGS) && (erase[i] != NULL))
 					i++;
-					
+				if (i >= MAX_ARGS)
+					break;
+
 				erase[i++] = optarg;
 				erase[i] = NULL;
 				break;
