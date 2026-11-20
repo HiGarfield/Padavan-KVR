@@ -529,7 +529,8 @@ ej_get_AiDisk_status(int eid, webs_t wp, int argc, char **argv)
 					websWrite(wp, "else ");
 
 				follow_info = rindex(follow_partition->mount_point, '/');
-				websWrite(wp, "if (poolName == \"%s\") {\n", follow_info+1);
+				websWrite(wp, "if (poolName == \"%s\") {\n",
+					(follow_info != NULL) ? follow_info + 1 : follow_partition->mount_point);
 				websWrite(wp, "	return [");
 
 				result = get_all_folder_in_mount_path(follow_partition->mount_point, &sh_num, &folder_list);
@@ -1129,7 +1130,9 @@ ej_get_share_tree(int eid, webs_t wp, int argc, char **argv)
 						websWrite(wp, ", ");
 
 					follow_info = rindex(follow_partition->mount_point, '/');
-					websWrite(wp, "\"%s#%u#%u\"", follow_info+1, partition_count, share_count);
+					websWrite(wp, "\"%s#%u#%u\"",
+						(follow_info != NULL) ? follow_info + 1 : follow_partition->mount_point,
+						partition_count, share_count);
 				}
 
 				free_2_dimension_list(&share_count, &folder_list);
