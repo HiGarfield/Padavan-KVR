@@ -290,7 +290,11 @@ write_smb_conf(void)
 				if (follow_partition->mount_point == NULL)
 					continue;
 				
-				mount_folder = strrchr(follow_partition->mount_point, '/')+1;
+				mount_folder = strrchr(follow_partition->mount_point, '/');
+				if (mount_folder != NULL)
+					mount_folder++;
+				else
+					mount_folder = follow_partition->mount_point;
 				
 				fprintf(fp, "[%s]\n", mount_folder);
 				fprintf(fp, "comment = %s's %s\n", follow_disk->tag, mount_folder);
